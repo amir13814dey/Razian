@@ -1,10 +1,10 @@
 {
-  "name": "Razian Tubes",
-  "short_name": "Razian",
+  "name": "Razian Market Hub",
+  "short_name": "Razian Market",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#030407",
-  "theme_color": "#ff0033",
+  "theme_color": "#030407",
   "icons": [
     {
       "src": "icon.png",
