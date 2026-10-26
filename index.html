@@ -1,224 +1,1522 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0b1220" />
-  <title>قیمت لحظه‌ای بازار</title>
-  <link rel="manifest" href="manifest.json" />
-  <style>
-    :root {
-      --bg: #0b1220;
-      --card: #111c31;
-      --border: #1f2d45;
-      --text: #e6edf7;
-      --muted: #8ba0bd;
-      --green: #22c55e;
-      --red: #ef4444;
-      --gold: #f5c542;
-      --oil: #64748b;
-      --fx: #38bdf8;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', Tahoma, sans-serif; }
-    body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 16px; }
-    header { display: flex; align-items: center; justify-content: space-between; padding: 8px 4px 20px; }
-    h1 { font-size: 1.1rem; font-weight: 700; letter-spacing: -.3px; }
-    #status { font-size: .7rem; color: var(--muted); display: flex; align-items: center; gap: 6px; }
-    #status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
-    #status.live .dot { background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse 1.8s infinite; }
-    @keyframes pulse { 50% { opacity: .35; } }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#0a0f1c" />
+<meta name="description" content="Razian Price — بازار لحظه‌ای" />
+<title>Razian Price</title>
+<style>
+:root{
+  --bg:#0a0f1c;--surface:#111a2e;--surface2:#17233d;--border:#1f2f4d;
+  --text:#e8eef9;--muted:#7b8ba3;--up:#22c55e;--down:#ef4444;--accent:#f5c542;
+  --accent-dim:#f5c54222;--radius:14px;--tab-h:68px;
+  --font:'Vazirmatn',Tahoma,system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font-family:var(--font);overflow-x:hidden;
+  padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom))}
+h1,h2,h3{font-weight:700;letter-spacing:-.02em}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select{font-family:inherit;font-size:14px}
 
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
-    .card {
-      background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 14px;
-      position: relative; overflow: hidden; transition: border-color .2s;
-    }
-    .card:hover { border-color: #2e425f; }
-    .card .tag { font-size: .62rem; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 6px; display: block; }
-    .card .name { font-size: .82rem; font-weight: 600; margin-bottom: 8px; }
-    .card .price { font-size: 1.18rem; font-weight: 800; font-variant-numeric: tabular-nums; direction: ltr; text-align: right; }
-    .card .meta { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; font-size: .68rem; }
-    .card .change { font-weight: 700; direction: ltr; }
-    .up { color: var(--green); }
-    .down { color: var(--red); }
-    .flat { color: var(--muted); }
-    .card .time { color: var(--muted); direction: ltr; font-size: .6rem; }
-    .card::after { content: ''; position: absolute; inset: auto 0 0 0; height: 3px; background: var(--accent, #334155); opacity: .5; }
-    .gold { --accent: var(--gold); }
-    .oil { --accent: var(--oil); }
-    .fx { --accent: var(--fx); }
-    .ir { --accent: #a78bfa; }
+/* Header */
+.app-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 8px;position:sticky;top:0;z-index:20;
+  background:linear-gradient(180deg,var(--bg) 70%,transparent)}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#e0a800);
+  display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#0a0f1c;box-shadow:0 4px 20px #f5c54240}
+.brand-text h1{font-size:16px;line-height:1.1}
+.brand-text p{font-size:10px;color:var(--muted);margin-top:2px}
+.header-status{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--muted);
+  padding:6px 10px;background:var(--surface);border-radius:20px;border:1px solid var(--border)}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--muted)}
+.dot.live{background:var(--up);box-shadow:0 0 8px var(--up);animation:pulse 1.8s infinite}
+@keyframes pulse{50%{opacity:.3}}
 
-    .toolbar { display: flex; gap: 8px; margin: 16px 0; }
-    button {
-      flex: 1; padding: 11px; border-radius: 12px; border: 1px solid var(--border);
-      background: var(--card); color: var(--text); font-weight: 600; font-size: .8rem; cursor: pointer;
-    }
-    button:active { transform: scale(.985); }
-    #lastUpdate { text-align: center; font-size: .65rem; color: var(--muted); margin-top: 14px; }
-  </style>
+/* Banners */
+#offline-banner,#update-prompt{position:fixed;top:0;left:0;right:0;z-index:100;padding:8px 16px;font-size:12px;text-align:center;
+  background:var(--surface2);color:var(--accent);border-bottom:1px solid var(--border)}
+#update-prompt{display:flex;align-items:center;justify-content:center;gap:10px}
+#update-prompt button{padding:4px 12px;background:var(--accent);color:#0a0f1c;border-radius:8px;font-weight:700;font-size:11px}
+[hidden]{display:none!important}
+
+/* Main */
+.view-root{padding:0 16px}
+.view-title{font-size:22px;margin:8px 0 14px;display:flex;align-items:center;gap:8px}
+.view-title .badge{font-size:10px;padding:3px 8px;border-radius:20px;background:var(--accent-dim);color:var(--accent);font-weight:600}
+
+/* Filters */
+.filters{display:flex;gap:6px;overflow-x:auto;padding-bottom:12px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.chip{padding:7px 14px;border-radius:20px;background:var(--surface);border:1px solid var(--border);font-size:12px;
+  white-space:nowrap;color:var(--muted);transition:all .15s;font-weight:600}
+.chip.active{background:var(--accent);color:#0a0f1c;border-color:var(--accent)}
+
+/* Market grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px;margin-bottom:20px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px;
+  position:relative;overflow:hidden;cursor:pointer;transition:border-color .15s,transform .1s}
+.card:hover{border-color:#2e425f}
+.card:active{transform:scale(.98)}
+.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.card-sym{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.5px}
+.card-tag{font-size:9px;padding:2px 6px;border-radius:6px;background:var(--surface2);color:var(--muted)}
+.card-name{font-size:13px;font-weight:600;margin-bottom:10px;line-height:1.3}
+.card-price{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums;direction:ltr;text-align:right;
+  font-feature-settings:'tnum' 1;margin-bottom:6px}
+.card-change{font-size:11px;font-weight:700;direction:ltr;text-align:left;display:inline-block;
+  padding:2px 6px;border-radius:6px}
+.card-change.up{color:var(--up);background:#22c55e18}
+.card-change.down{color:var(--down);background:#ef444418}
+.card-change.flat{color:var(--muted);background:var(--surface2)}
+.card-spark{margin-top:10px;height:28px}
+
+/* Chart */
+.chart-controls{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px}
+.chart-frame{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.chart-canvas{display:block;width:100%;height:340px;touch-action:none}
+.chart-legend{position:absolute;top:10px;right:10px;font-size:10px;color:var(--muted);display:flex;gap:10px;
+  background:#0a0f1ccc;padding:6px 10px;border-radius:8px;backdrop-filter:blur(8px);pointer-events:none;direction:ltr}
+.chart-legend span b{color:var(--text);font-weight:700}
+.chart-crosshair{position:absolute;font-size:10px;padding:2px 6px;background:#0a0f1c;border:1px solid var(--border);
+  border-radius:4px;color:var(--text);pointer-events:none;direction:ltr;font-variant-numeric:tabular-nums;display:none}
+.indicator-panel{margin-top:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.indicator-panel canvas{display:block;width:100%;height:110px}
+
+/* Portfolio */
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.summary-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px}
+.summary-label{font-size:11px;color:var(--muted);margin-bottom:6px}
+.summary-value{font-size:20px;font-weight:800;direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
+.summary-sub{font-size:11px;margin-top:4px}
+
+.position{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px;
+  margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.position-info{flex:1;min-width:0}
+.position-sym{font-size:12px;font-weight:700;color:var(--accent);direction:ltr;text-align:right}
+.position-amount{font-size:11px;color:var(--muted);margin-top:3px;direction:ltr;text-align:right}
+.position-pnl{text-align:left;direction:ltr;font-variant-numeric:tabular-nums}
+.position-pnl .pnl-val{font-size:14px;font-weight:800}
+.position-pnl .pnl-pct{font-size:10px;margin-top:2px}
+.position .del-btn{padding:6px;color:var(--muted);font-size:16px}
+.position .del-btn:hover{color:var(--down)}
+
+.pie-wrap{display:flex;justify-content:center;padding:14px;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);margin-bottom:12px}
+.pie-wrap canvas{max-width:240px;height:auto}
+
+/* Alerts */
+.alert-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px;
+  margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.alert-desc{flex:1;font-size:12px;line-height:1.5}
+.alert-desc .sym{color:var(--accent);font-weight:700;direction:ltr;display:inline-block}
+.alert-desc .cond{color:var(--muted);font-size:11px;margin-top:3px;direction:ltr}
+.alert-toggle{padding:4px;font-size:18px}
+.alert-toggle.on{color:var(--up)}
+.alert-toggle.off{color:var(--muted)}
+
+/* Forms */
+.form-group{margin-bottom:12px}
+.form-label{font-size:11px;color:var(--muted);margin-bottom:6px;display:block}
+.form-input,.form-select{width:100%;padding:11px 14px;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;color:var(--text);outline:none;font-size:13px;transition:border .15s}
+.form-input:focus,.form-select:focus{border-color:var(--accent)}
+.btn-primary{width:100%;padding:13px;background:var(--accent);color:#0a0f1c;border-radius:12px;
+  font-weight:800;font-size:14px;margin-top:8px;transition:transform .1s}
+.btn-primary:active{transform:scale(.98)}
+.btn-secondary{width:100%;padding:11px;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;color:var(--text);font-weight:600;font-size:12px;margin-top:8px}
+
+/* Settings */
+.setting-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;
+  margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.setting-info h4{font-size:13px;margin-bottom:3px}
+.setting-info p{font-size:10px;color:var(--muted);line-height:1.4}
+.switch{position:relative;width:44px;height:24px;background:var(--surface2);border-radius:12px;transition:.2s;flex-shrink:0}
+.switch.on{background:var(--accent)}
+.switch::after{content:'';position:absolute;top:2px;right:2px;width:20px;height:20px;border-radius:50%;
+  background:#fff;transition:.2s}
+.switch.on::after{right:22px}
+
+/* Tab bar */
+.tab-bar{position:fixed;bottom:0;left:0;right:0;height:calc(var(--tab-h) + env(safe-area-inset-bottom));
+  background:var(--surface);border-top:1px solid var(--border);display:flex;
+  padding-bottom:env(safe-area-inset-bottom);z-index:30;backdrop-filter:blur(12px);background:#111a2ee6}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  color:var(--muted);font-size:10px;font-weight:600;transition:color .15s}
+.tab.active{color:var(--accent)}
+.tab-icon{font-size:18px}
+
+/* Skeleton */
+.skeleton{background:linear-gradient(90deg,var(--surface) 0%,var(--surface2) 50%,var(--surface) 100%);
+  background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--radius);height:100px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:#000a;z-index:50;display:flex;align-items:flex-end;justify-content:center;
+  animation:fadeIn .2s}
+.modal-overlay[hidden]{display:none}
+.modal{background:var(--surface);border-radius:22px 22px 0 0;padding:20px;width:100%;max-width:480px;
+  max-height:85vh;overflow-y:auto;animation:slideUp .25s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.modal-title{font-size:16px;font-weight:800}
+.modal-close{font-size:22px;color:var(--muted);padding:4px}
+</style>
 </head>
 <body>
-  <header>
-    <h1>📊 بازار لحظه‌ای</h1>
-    <div id="status"><span class="dot"></span><span id="statusText">در حال اتصال…</span></div>
-  </header>
 
-  <main class="grid" id="grid"></main>
+<div id="offline-banner" hidden>📡 آفلاین — نمایش آخرین دادهٔ ذخیره‌شده</div>
+<div id="update-prompt" hidden>نسخهٔ جدید آماده است <button id="reload-btn">بارگذاری</button></div>
 
-  <div class="toolbar">
-    <button id="refreshBtn">⟳ به‌روزرسانی دستی</button>
+<header class="app-header">
+  <div class="brand">
+    <div class="brand-mark">R</div>
+    <div class="brand-text">
+      <h1>Razian</h1>
+      <p>بازار لحظه‌ای</p>
+    </div>
   </div>
-  <p id="lastUpdate">—</p>
+  <div class="header-status">
+    <span id="conn-dot" class="dot"></span>
+    <span id="conn-text">اتصال…</span>
+  </div>
+</header>
 
-  <script>
-    // ---------- Config ----------
-    const BIQUOTE = 'https://biquote.io/api/latest';
-    const GOLD_API = 'https://api.gold-api.com/price/XAU';
-    const IRAN_API = 'https://nerkh.jahankhahan.shop/data/live.json';
+<main id="view-root" class="view-root"></main>
 
-    // دارایی‌های نمایش‌داده‌شده (نمادها را می‌توانی کم/زیاد کنی)
-    const BIQUOTE_SYMBOLS = [
-      { symbol: 'XAUUSD', label: 'طلا (اونس جهانی)', unit: '$', kind: 'gold', tag: 'Gold' },
-      { symbol: 'WTIUSD',  label: 'نفت WTI',          unit: '$', kind: 'oil',  tag: 'Oil'  },
-      { symbol: 'EURUSD',  label: 'یورو / دلار',      unit: '',  kind: 'fx',   tag: 'FX'   },
-      { symbol: 'GBPUSD',  label: 'پوند / دلار',      unit: '',  kind: 'fx',   tag: 'FX'   },
-      { symbol: 'USDJPY',  label: 'دلار / ین',        unit: '¥', kind: 'fx',   tag: 'FX'   },
-    ];
+<nav class="tab-bar" role="tablist">
+  <button class="tab active" data-tab="market"><span class="tab-icon">📊</span><span>بازار</span></button>
+  <button class="tab" data-tab="chart"><span class="tab-icon">📈</span><span>نمودار</span></button>
+  <button class="tab" data-tab="portfolio"><span class="tab-icon">💼</span><span>پورتفولیو</span></button>
+  <button class="tab" data-tab="alerts"><span class="tab-icon">🔔</span><span>هشدار</span></button>
+  <button class="tab" data-tab="settings"><span class="tab-icon">⚙️</span><span>تنظیمات</span></button>
+</nav>
 
-    // ---------- State ----------
-    const state = new Map();
-    const grid = document.getElementById('grid');
-    const statusEl = document.getElementById('status');
-    const statusText = document.getElementById('statusText');
-    const lastUpdateEl = document.getElementById('lastUpdate');
+<div id="modal-root"></div>
 
-    // ---------- Helpers ----------
-    const fmt = (n, dec = 2) => Number(n).toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
-    const fmtIran = (n) => Number(n).toLocaleString('fa-IR');
+<script>
+'use strict';
 
-    function setStatus(live, text) {
-      statusEl.classList.toggle('live', live);
-      statusText.textContent = text;
+/* ═══════════════════════════════════════════════════════════════
+   RAZIAN PRICE — Single-file PWA
+   Architecture: constants → utils → db → sources → indicators
+                 → chart → state → views → router → init
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── 1. CONFIG ─────────────────────────────────────────────── */
+const CONFIG = {
+  version: '1.0.0',
+  refreshMs: 15000,
+  historyKeepDays: 90,
+  staleMs: 60000,
+  sources: {
+    biquote:  { base: 'https://biquote.io/api/latest',  enabled: true,  rpm: 30 },
+    goldapi:  { base: 'https://api.gold-api.com/price', enabled: true,  rpm: 60 },
+    iran:     { base: 'https://nerkh.jahankhahan.shop/data/live.json', enabled: true, rpm: 30 },
+  },
+};
+
+const REGISTRY = {
+  XAUUSD: { name:'طلا (اونس)',       unit:'$',    tag:'gold',  source:'biquote', decimals:2 },
+  XAGUSD: { name:'نقره (اونس)',       unit:'$',    tag:'metal', source:'biquote', decimals:3 },
+  WTIUSD: { name:'نفت WTI',           unit:'$',    tag:'oil',   source:'biquote', decimals:2 },
+  BRNUSD: { name:'نفت برنت',          unit:'$',    tag:'oil',   source:'biquote', decimals:2 },
+  EURUSD: { name:'یورو / دلار',       unit:'',     tag:'fx',    source:'biquote', decimals:4 },
+  GBPUSD: { name:'پوند / دلار',       unit:'',     tag:'fx',    source:'biquote', decimals:4 },
+  USDJPY: { name:'دلار / ین',         unit:'¥',    tag:'fx',    source:'biquote', decimals:2 },
+  USDIRT: { name:'دلار آمریکا',        unit:'تومان', tag:'iran',  source:'iran',    decimals:0 },
+  GOLD18: { name:'طلای ۱۸ عیار',      unit:'تومان', tag:'iran',  source:'iran',    decimals:0 },
+  COIN:   { name:'سکه امامی',          unit:'تومان', tag:'iran',  source:'iran',    decimals:0 },
+  BTCUSD: { name:'بیت‌کوین',          unit:'$',    tag:'crypto',source:'biquote', decimals:0 },
+  ETHUSD: { name:'اتریوم',            unit:'$',    tag:'crypto',source:'biquote', decimals:2 },
+};
+
+const TAG_LABELS = { gold:'طلا', metal:'فلز', oil:'انرژی', fx:'ارز', iran:'ایران', crypto:'رمزارز', all:'همه' };
+
+/* ── 2. UTILS ──────────────────────────────────────────────── */
+const U = {
+  fmt(n, dec=2){
+    if(n==null||isNaN(n)) return '—';
+    return Number(n).toLocaleString('en-US',{minimumFractionDigits:dec,maximumFractionDigits:dec});
+  },
+  fmtIR(n, dec=0){
+    if(n==null||isNaN(n)) return '—';
+    return Number(n).toLocaleString('fa-IR',{minimumFractionDigits:dec,maximumFractionDigits:dec});
+  },
+  price(sym, v){
+    const r = REGISTRY[sym]; if(!r) return String(v);
+    if(r.tag==='iran') return U.fmtIR(v, r.decimals) + ' ' + r.unit;
+    return (r.unit||'') + U.fmt(v, r.decimals);
+  },
+  time(date=new Date()){
+    return date.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'});
+  },
+  dateTime(date=new Date()){
+    return date.toLocaleString('fa-IR',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+  },
+  pct(n){
+    if(n==null||isNaN(n)) return '—';
+    return (n>0?'+':'') + n.toFixed(2) + '%';
+  },
+  changeClass(n){ return n>0?'up':n<0?'down':'flat'; },
+  $: (s,r=document)=>r.querySelector(s),
+  $$: (s,r=document)=>Array.from(r.querySelectorAll(s)),
+  el(tag,attrs={},...children){
+    const e=document.createElement(tag);
+    Object.entries(attrs).forEach(([k,v])=>{
+      if(k==='class') e.className=v;
+      else if(k==='style'&&typeof v==='object') Object.assign(e.style,v);
+      else if(k.startsWith('on')&&typeof v==='function') e[k.toLowerCase()]=v;
+      else if(k==='dataset') Object.assign(e.dataset,v);
+      else e.setAttribute(k,v);
+    });
+    children.flat().forEach(c=>{
+      if(c==null||c===false) return;
+      e.appendChild(typeof c==='string'?document.createTextNode(c):c);
+    });
+    return e;
+  },
+  debounce(fn,ms){
+    let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms)};
+  },
+  sleep(ms){return new Promise(r=>setTimeout(r,ms))},
+  uuid(){
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{
+      const r=Math.random()*16|0,v=c==='x'?r:(r&0x3|0x8);return v.toString(16);
+    });
+  },
+};
+
+/* ── 3. EVENT BUS ──────────────────────────────────────────── */
+const Bus = (()=>{
+  const subs = new Map();
+  return {
+    on(evt,fn){
+      if(!subs.has(evt)) subs.set(evt,[]);
+      subs.get(evt).push(fn);
+      return ()=>{const i=subs.get(evt).indexOf(fn);if(i>=0)subs.get(evt).splice(i,1)};
+    },
+    emit(evt,data){
+      (subs.get(evt)||[]).forEach(fn=>{try{fn(data)}catch(e){console.error('[Bus]',e)}});
+    },
+  };
+})();
+
+/* ── 4. DATABASE (IndexedDB with migration) ────────────────── */
+const DB = (()=>{
+  const DB_NAME = 'razian_price';
+  const DB_VERSION = 2;
+  let dbPromise = null;
+
+  function open(){
+    if(dbPromise) return dbPromise;
+    dbPromise = new Promise((resolve,reject)=>{
+      const req = indexedDB.open(DB_NAME, DB_VERSION);
+      req.onupgradeneeded = (e)=>{
+        const db = e.target.result;
+        const oldV = e.oldVersion;
+        // v0 → v1: initial
+        if(oldV<1){
+          if(!db.objectStoreNames.contains('ticks')){
+            const s = db.createObjectStore('ticks',{keyPath:'id',autoIncrement:true});
+            s.createIndex('symbol_time','symbol_ts',{unique:false});
+          }
+          if(!db.objectStoreNames.contains('candles')){
+            const s = db.createObjectStore('candles',{keyPath:['symbol','tf','ts']});
+            s.createIndex('symbol_tf','symbol_tf',{unique:false});
+          }
+          if(!db.objectStoreNames.contains('portfolio')){
+            db.createObjectStore('portfolio',{keyPath:'id'});
+          }
+          if(!db.objectStoreNames.contains('alerts')){
+            db.createObjectStore('alerts',{keyPath:'id'});
+          }
+          if(!db.objectStoreNames.contains('settings')){
+            db.createObjectStore('settings',{keyPath:'key'});
+          }
+        }
+        // v1 → v2: add composite tick index for faster range queries
+        if(oldV>=1 && oldV<2){
+          const tx = e.target.transaction;
+          const store = tx.objectStore('ticks');
+          if(!store.indexNames.contains('sym_ts')){
+            store.createIndex('sym_ts',['symbol','ts'],{unique:false});
+          }
+        }
+      };
+      req.onsuccess = ()=>resolve(req.result);
+      req.onerror = ()=>reject(req.error);
+    });
+    return dbPromise;
+  }
+
+  async function tx(store, mode='readonly'){
+    const db = await open();
+    return db.transaction(store, mode).objectStore(store);
+  }
+
+  function wrap(req){
+    return new Promise((res,rej)=>{
+      req.onsuccess=()=>res(req.result);
+      req.onerror=()=>rej(req.error);
+    });
+  }
+
+  return {
+    async put(store, data){
+      const s = await tx(store,'readwrite');
+      return wrap(s.put(data));
+    },
+    async get(store,key){
+      const s = await tx(store);
+      return wrap(s.get(key));
+    },
+    async del(store,key){
+      const s = await tx(store,'readwrite');
+      return wrap(s.delete(key));
+    },
+    async all(store){
+      const s = await tx(store);
+      return wrap(s.getAll());
+    },
+    async range(store, indexName, lower, upper){
+      const s = await tx(store);
+      const idx = s.index(indexName);
+      return wrap(idx.getAll(lower ? IDBKeyRange.bound(lower, upper) : undefined));
+    },
+    async settingsGet(key, def=null){
+      const r = await this.get('settings',key);
+      return r ? r.value : def;
+    },
+    async settingsSet(key, value){
+      return this.put('settings',{key,value});
+    },
+    async clear(){
+      const db = await open();
+      const stores = Array.from(db.objectStoreNames);
+      const t = db.transaction(stores,'readwrite');
+      stores.forEach(s=>t.objectStore(s).clear());
+      return new Promise((res,rej)=>{t.oncomplete=res;t.onerror=()=>rej(t.error)});
+    },
+  };
+})();
+
+/* ── 5. TIMESERIES (tick storage + downsampling) ───────────── */
+const TimeSeries = (()=>{
+  const TIMEFRAMES = {
+    '1m':  60_000,
+    '5m':  300_000,
+    '15m': 900_000,
+    '1h':  3_600_000,
+    '4h':  14_400_000,
+    '1d':  86_400_000,
+  };
+
+  async function recordTick(symbol, price, ts=Date.now()){
+    const tick = { symbol, ts, price, symbol_ts: `${symbol}_${ts}` };
+    await DB.put('ticks', tick);
+    // Update all timeframes in-place
+    for(const [tf, ms] of Object.entries(TIMEFRAMES)){
+      await upsertCandle(symbol, tf, price, ts, ms);
     }
+  }
 
-    function render() {
-      grid.innerHTML = '';
-      for (const item of state.values()) {
-        const changeClass = item.change > 0 ? 'up' : item.change < 0 ? 'down' : 'flat';
-        const changeText = item.change == null ? '—' : `${item.change > 0 ? '+' : ''}${item.change.toFixed(2)}%`;
-        const priceText = item.kind === 'ir'
-          ? fmtIran(item.price)
-          : item.unit === '$'
-            ? `$${fmt(item.price, item.symbol === 'USDJPY' ? 2 : 2)}`
-            : fmt(item.price, 4);
+  async function upsertCandle(symbol, tf, price, ts, tfMs){
+    const bucketTs = Math.floor(ts / tfMs) * tfMs;
+    const key = [symbol, tf, bucketTs];
+    const existing = await DB.get('candles', key);
+    const candle = existing || {
+      symbol, tf, ts: bucketTs, open: price, high: price, low: price, close: price, volume: 0, symbol_tf: `${symbol}_${tf}`,
+    };
+    candle.high = Math.max(candle.high, price);
+    candle.low = Math.min(candle.low, price);
+    candle.close = price;
+    candle.volume += 1;
+    await DB.put('candles', candle);
+  }
 
-        const card = document.createElement('div');
-        card.className = `card ${item.kind}`;
-        card.innerHTML = `
-          <span class="tag">${item.tag}</span>
-          <div class="name">${item.label}</div>
-          <div class="price">${priceText}</div>
-          <div class="meta">
-            <span class="change ${changeClass}">${changeText}</span>
-            <span class="time">${item.time || '—'}</span>
-          </div>`;
-        grid.appendChild(card);
+  async function getCandles(symbol, tf, limit=200){
+    const all = await DB.all('candles');
+    return all.filter(c=>c.symbol===symbol && c.tf===tf)
+      .sort((a,b)=>a.ts-b.ts)
+      .slice(-limit);
+  }
+
+  async function getLatest(symbol){
+    const ticks = await DB.range('ticks','sym_ts',
+      [symbol, 0], [symbol, Date.now()+1e10]);
+    if(!ticks.length) return null;
+    return ticks[ticks.length-1];
+  }
+
+  async function pruneOld(){
+    const cutoff = Date.now() - CONFIG.historyKeepDays * 86_400_000;
+    const db = await DB.range('ticks','sym_ts', null, null);
+    const old = db.filter(t=>t.ts < cutoff);
+    for(const t of old) await DB.del('ticks', t.id);
+  }
+
+  return { TIMEFRAMES, recordTick, getCandles, getLatest, pruneOld };
+})();
+
+/* ── 6. INDICATORS (pure functions, worker-compatible) ─────── */
+const Indicators = {
+  sma(values, period){
+    const out = new Array(values.length).fill(null);
+    let sum = 0;
+    for(let i=0;i<values.length;i++){
+      sum += values[i];
+      if(i>=period) sum -= values[i-period];
+      if(i>=period-1) out[i] = sum/period;
+    }
+    return out;
+  },
+  ema(values, period){
+    const out = new Array(values.length).fill(null);
+    const k = 2/(period+1);
+    let prev = null;
+    for(let i=0;i<values.length;i++){
+      if(i<period-1) continue;
+      if(prev===null){
+        let s=0;for(let j=0;j<period;j++) s+=values[i-j];
+        prev = s/period;
+      } else {
+        prev = values[i]*k + prev*(1-k);
+      }
+      out[i] = prev;
+    }
+    return out;
+  },
+  rsi(values, period=14){
+    const out = new Array(values.length).fill(null);
+    if(values.length < period+1) return out;
+    let gain=0, loss=0;
+    for(let i=1;i<=period;i++){
+      const d = values[i]-values[i-1];
+      if(d>0) gain+=d; else loss-=d;
+    }
+    let avgG = gain/period, avgL = loss/period;
+    out[period] = avgL===0 ? 100 : 100 - 100/(1+avgG/avgL);
+    for(let i=period+1;i<values.length;i++){
+      const d = values[i]-values[i-1];
+      const g = d>0?d:0, l = d<0?-d:0;
+      avgG = (avgG*(period-1)+g)/period;
+      avgL = (avgL*(period-1)+l)/period;
+      out[i] = avgL===0 ? 100 : 100 - 100/(1+avgG/avgL);
+    }
+    return out;
+  },
+  macd(values, fast=12, slow=26, signal=9){
+    const emaF = this.ema(values, fast);
+    const emaS = this.ema(values, slow);
+    const macdLine = values.map((_,i)=>
+      emaF[i]!=null && emaS[i]!=null ? emaF[i]-emaS[i] : null);
+    const macdVals = macdLine.filter(v=>v!=null);
+    const sig = this.ema(macdVals, signal);
+    // Align back
+    const signalLine = new Array(values.length).fill(null);
+    let sigIdx = 0;
+    for(let i=0;i<values.length;i++){
+      if(macdLine[i]!=null){
+        signalLine[i] = sig[sigIdx] ?? null;
+        sigIdx++;
       }
     }
+    const hist = values.map((_,i)=>
+      macdLine[i]!=null && signalLine[i]!=null ? macdLine[i]-signalLine[i] : null);
+    return { macd: macdLine, signal: signalLine, hist };
+  },
+  bollinger(values, period=20, mult=2){
+    const mid = this.sma(values, period);
+    const upper = new Array(values.length).fill(null);
+    const lower = new Array(values.length).fill(null);
+    for(let i=period-1;i<values.length;i++){
+      let sumSq = 0;
+      for(let j=0;j<period;j++) sumSq += Math.pow(values[i-j]-mid[i],2);
+      const sd = Math.sqrt(sumSq/period);
+      upper[i] = mid[i] + mult*sd;
+      lower[i] = mid[i] - mult*sd;
+    }
+    return { mid, upper, lower };
+  },
+  atr(candles, period=14){
+    const out = new Array(candles.length).fill(null);
+    if(candles.length < period+1) return out;
+    const tr = [null];
+    for(let i=1;i<candles.length;i++){
+      const c = candles[i], p = candles[i-1];
+      tr.push(Math.max(c.high-c.low, Math.abs(c.high-p.close), Math.abs(c.low-p.close)));
+    }
+    let sum = 0;
+    for(let i=1;i<=period;i++) sum += tr[i];
+    out[period] = sum/period;
+    for(let i=period+1;i<candles.length;i++){
+      out[i] = (out[i-1]*(period-1)+tr[i])/period;
+    }
+    return out;
+  },
+};
 
-    function upsert(key, data) {
-      state.set(key, { ...state.get(key), ...data });
+/* ── 7. SOURCES (adapter pattern) ──────────────────────────── */
+const Sources = (()=>{
+  const backoff = new Map(); // host → {fails, until}
+  const lastCall = new Map(); // host → ts
+
+  async function guardedFetch(url, host, minGap=2000){
+    // Circuit breaker
+    const bo = backoff.get(host);
+    if(bo && bo.until > Date.now()){
+      throw new Error(`circuit open: ${host}`);
+    }
+    // Rate limit
+    const last = lastCall.get(host) || 0;
+    const wait = minGap - (Date.now()-last);
+    if(wait>0) await U.sleep(wait);
+    lastCall.set(host, Date.now());
+
+    try {
+      const res = await fetch(url, { headers: { 'Accept':'application/json' } });
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+      backoff.delete(host);
+      return res;
+    } catch(e){
+      const b = backoff.get(host) || { fails: 0, until: 0 };
+      b.fails++;
+      b.until = Date.now() + Math.min(60000, 1000*Math.pow(2,b.fails));
+      backoff.set(host, b);
+      throw e;
+    }
+  }
+
+  async function biquote(symbols){
+    const url = `${CONFIG.sources.biquote.base}?${symbols.map(s=>`symbols=${s}`).join('&')}`;
+    const res = await guardedFetch(url, 'biquote.io');
+    const json = await res.json();
+    const list = Array.isArray(json) ? json : (json.data || json.ticks || []);
+    return list.map(r=>{
+      const sym = r.symbol || r.Symbol;
+      const price = r.price ?? r.mid ?? r.last;
+      const change = r.changePercent ?? r.change_percent ?? r.changePct ?? null;
+      const ts = r.timestamp ? new Date(r.timestamp).getTime() : Date.now();
+      return sym && price!=null ? { symbol:sym, price:Number(price), change:change!=null?Number(change):null, ts } : null;
+    }).filter(Boolean);
+  }
+
+  async function goldapi(){
+    const res = await guardedFetch(CONFIG.sources.goldapi.base + '/XAU', 'api.gold-api.com');
+    const j = await res.json();
+    return [{ symbol:'XAUUSD', price:Number(j.price), change:null, ts: j.updatedAt?new Date(j.updatedAt).getTime():Date.now() }];
+  }
+
+  async function iran(){
+    const res = await guardedFetch(CONFIG.sources.iran.base, 'jahankhahan.shop');
+    const j = await res.json();
+    const r = j.rates || {}, c = j.change || {};
+    const ts = j.time ? new Date(j.time).getTime() : Date.now();
+    const map = [['dollar','USDIRT'],['gold','GOLD18'],['emami','COIN']];
+    return map.filter(([k])=>r[k]!=null).map(([k,sym])=>({
+      symbol:sym, price:Number(r[k]), change:c[k]!=null?Number(c[k]):null, ts,
+    }));
+  }
+
+  return { biquote, goldapi, iran, guardedFetch };
+})();
+
+/* ── 8. DATA SERVICE (orchestration + cache) ───────────────── */
+const DataService = (()=>{
+  const state = new Map();
+  let lastOk = 0;
+  let lastErr = null;
+
+  function set(symbol, patch){
+    const prev = state.get(symbol) || {};
+    state.set(symbol, { ...prev, ...patch });
+    Bus.emit('price', { symbol, data: state.get(symbol) });
+  }
+
+  async function refreshAll(){
+    Bus.emit('status','loading');
+    const tasks = [];
+
+    // Biquote batch
+    const bqSyms = Object.keys(REGISTRY).filter(s=>REGISTRY[s].source==='biquote');
+    if(bqSyms.length){
+      tasks.push(
+        Sources.biquote(bqSyms).then(list=>{
+          list.forEach(t=>{
+            if(REGISTRY[t.symbol]){
+              set(t.symbol,{...t, receivedAt:Date.now()});
+              TimeSeries.recordTick(t.symbol,t.price,t.ts).catch(()=>{});
+            }
+          });
+        }).catch(e=>console.warn('[biquote]',e.message))
+      );
     }
 
-    // ---------- Fetchers ----------
-    async function fetchBiquote() {
-      const symbols = BIQUOTE_SYMBOLS.map(s => s.symbol);
-      const url = `${BIQUOTE}?${symbols.map(s => `symbols=${s}`).join('&')}`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`biquote ${res.status}`);
-      const json = await res.json();
-      const list = Array.isArray(json) ? json : json.data || json.ticks || [];
-
-      for (const raw of list) {
-        const sym = raw.symbol || raw.Symbol;
-        const conf = BIQUOTE_SYMBOLS.find(c => c.symbol === sym);
-        if (!conf) continue;
-        const price = raw.price ?? raw.mid ?? raw.last;
-        const change = raw.changePercent ?? raw.change_percent ?? raw.changePct ?? null;
-        const t = raw.timestamp || raw.updatedAt;
-        upsert(sym, {
-          ...conf,
-          price,
-          change: change != null ? Number(change) : null,
-          time: t ? new Date(t).toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' }) : null,
+    // Iran batch
+    tasks.push(
+      Sources.iran().then(list=>{
+        list.forEach(t=>{
+          if(REGISTRY[t.symbol]){
+            set(t.symbol,{...t, receivedAt:Date.now()});
+            TimeSeries.recordTick(t.symbol,t.price,t.ts).catch(()=>{});
+          }
         });
+      }).catch(e=>console.warn('[iran]',e.message))
+    );
+
+    // Gold fallback
+    if(!state.get('XAUUSD')?.price){
+      tasks.push(Sources.goldapi().then(list=>{
+        list.forEach(t=>{
+          set(t.symbol,{...t, receivedAt:Date.now()});
+          TimeSeries.recordTick(t.symbol,t.price,t.ts).catch(()=>{});
+        });
+      }).catch(e=>console.warn('[gold]',e.message)));
+    }
+
+    const results = await Promise.allSettled(tasks);
+    const ok = results.some(r=>r.status==='fulfilled');
+    if(ok){
+      lastOk = Date.now();
+      lastErr = null;
+      Bus.emit('status','live');
+      Bus.emit('refresh', { at:lastOk });
+    } else {
+      lastErr = 'no source reachable';
+      Bus.emit('status','error');
+    }
+    return state;
+  }
+
+  function get(symbol){ return state.get(symbol); }
+  function all(){ return Array.from(state.values()); }
+  function lastUpdate(){ return lastOk; }
+  function hasErr(){ return lastErr; }
+
+  async function hydrateFromDB(){
+    for(const sym of Object.keys(REGISTRY)){
+      try {
+        const t = await TimeSeries.getLatest(sym);
+        if(t) set(sym, { symbol:sym, price:t.price, change:null, ts:t.ts, receivedAt:t.ts, fromCache:true });
+      } catch(_){}
+    }
+  }
+
+  return { refreshAll, get, all, lastUpdate, hasErr, hydrateFromDB };
+})();
+
+/* ── 9. CHART RENDERER (canvas from scratch) ───────────────── */
+const Chart = (()=>{
+  function render(canvas, candles, opts={}){
+    if(!canvas || !candles || candles.length<2) return;
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width*dpr;
+    canvas.height = rect.height*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,rect.width,rect.height);
+
+    const W = rect.width, H = rect.height;
+    const padTop = 12, padBottom = 8, padRight = 8, padLeft = 62;
+    const volH = Math.floor(H*0.18);
+    const priceH = H - padTop - padBottom - volH - 8;
+
+    // Price range
+    let lo = Infinity, hi = -Infinity;
+    for(const c of candles){ lo=Math.min(lo,c.low); hi=Math.max(hi,c.high); }
+    const range = hi-lo || 1;
+    const padY = range*0.08;
+    lo -= padY; hi += padY;
+
+    const xFor = i => padLeft + (i/(candles.length-1))*(W-padLeft-padRight);
+    const yFor = p => padTop + (1-(p-lo)/(hi-lo))*priceH;
+
+    // Background grid
+    ctx.strokeStyle = '#1f2f4d';
+    ctx.lineWidth = 1;
+    ctx.font = '10px Tahoma';
+    ctx.fillStyle = '#7b8ba3';
+    ctx.textAlign = 'left';
+    for(let i=0;i<=4;i++){
+      const y = padTop + (i/4)*priceH;
+      ctx.beginPath();
+      ctx.moveTo(padLeft,y);
+      ctx.lineTo(W-padRight,y);
+      ctx.stroke();
+      const p = hi - (i/4)*(hi-lo);
+      ctx.fillText(p.toFixed(p<10?3:p<1000?2:0), 4, y+3);
+    }
+
+    // Candles
+    const cw = Math.max(1, (W-padLeft-padRight)/candles.length * 0.7);
+    for(let i=0;i<candles.length;i++){
+      const c = candles[i];
+      const up = c.close >= c.open;
+      const col = up ? '#22c55e' : '#ef4444';
+      const x = xFor(i);
+      ctx.strokeStyle = col;
+      ctx.fillStyle = col;
+      // wick
+      ctx.beginPath();
+      ctx.moveTo(x, yFor(c.high));
+      ctx.lineTo(x, yFor(c.low));
+      ctx.stroke();
+      // body
+      const yo = yFor(c.open), yc = yFor(c.close);
+      const top = Math.min(yo,yc), h = Math.max(1, Math.abs(yc-yo));
+      ctx.fillRect(x-cw/2, top, cw, h);
+    }
+
+    // Overlays: SMA/EMA/Bollinger
+    function drawLine(values, color, width=1.5){
+      ctx.strokeStyle = color; ctx.lineWidth = width;
+      ctx.beginPath();
+      let started = false;
+      for(let i=0;i<values.length;i++){
+        if(values[i]==null) continue;
+        const x = xFor(i), y = yFor(values[i]);
+        if(!started){ctx.moveTo(x,y);started=true;}else ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+    }
+    const closes = candles.map(c=>c.close);
+    if(opts.sma20){ drawLine(Indicators.sma(closes,20), '#f5c542', 1.5); }
+    if(opts.ema50){ drawLine(Indicators.ema(closes,50), '#38bdf8', 1.5); }
+    if(opts.bollinger){
+      const bb = Indicators.bollinger(closes,20,2);
+      drawLine(bb.upper, '#a78bfa', 1);
+      drawLine(bb.mid,   '#a78bfa', 1);
+      drawLine(bb.lower, '#a78bfa', 1);
+    }
+
+    // Volume
+    const volY = padTop + priceH + 12;
+    let vhi = 0;
+    for(const c of candles) vhi = Math.max(vhi, c.volume);
+    const volScale = vhi>0 ? volH/vhi : 0;
+    for(let i=0;i<candles.length;i++){
+      const c = candles[i];
+      const up = c.close >= c.open;
+      ctx.fillStyle = up ? '#22c55e55' : '#ef444455';
+      const h = Math.max(1, c.volume*volScale);
+      ctx.fillRect(xFor(i)-cw/2, volY+volH-h, cw, h);
+    }
+
+    // Last price line
+    const last = candles[candles.length-1];
+    const ly = yFor(last.close);
+    ctx.strokeStyle = '#f5c542';
+    ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(padLeft,ly); ctx.lineTo(W-padRight,ly); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#f5c542';
+    ctx.fillRect(W-padLeft+2, ly-8, padLeft-4, 16);
+    ctx.fillStyle = '#0a0f1c';
+    ctx.font = 'bold 10px Tahoma';
+    ctx.fillText(last.close.toFixed(last.close<10?3:2), W-padLeft+4, ly+3);
+
+    // Crosshair
+    let mouse = null;
+    if(canvas._mouse) mouse = canvas._mouse;
+    if(mouse && mouse.x>=padLeft && mouse.x<=W-padRight){
+      ctx.strokeStyle = '#7b8ba3aa';
+      ctx.setLineDash([3,3]);
+      ctx.beginPath();
+      ctx.moveTo(mouse.x, padTop); ctx.lineTo(mouse.x, volY+volH);
+      ctx.moveTo(padLeft, mouse.y); ctx.lineTo(W-padRight, mouse.y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      const pr = hi - ((mouse.y-padTop)/priceH)*(hi-lo);
+      if(pr>=lo && pr<=hi){
+        ctx.fillStyle = '#17233d';
+        ctx.fillRect(W-padLeft+2, mouse.y-8, padLeft-4, 16);
+        ctx.fillStyle = '#e8eef9';
+        ctx.font = 'bold 10px Tahoma';
+        ctx.fillText(pr.toFixed(pr<10?3:2), W-padLeft+4, mouse.y+3);
       }
     }
 
-    async function fetchGoldFallback() {
-      // فقط اگر biquote طلا را نداد، از gold-api.com استفاده کن
-      if (state.has('XAUUSD') && state.get('XAUUSD').price) return;
-      const res = await fetch(GOLD_API);
-      if (!res.ok) throw new Error(`gold-api ${res.status}`);
-      const j = await res.json();
-      upsert('XAUUSD', {
-        symbol: 'XAUUSD', label: 'طلا (اونس جهانی)', unit: '$', kind: 'gold', tag: 'Gold',
-        price: j.price,
-        change: null,
-        time: j.updatedAt ? new Date(j.updatedAt).toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' }) : null,
+    canvas._renderParams = { xFor, yFor, padLeft, padRight, W, H, candles };
+  }
+
+  function renderIndicator(canvas, candles, type){
+    if(!canvas || !candles || candles.length<20) return;
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width*dpr;
+    canvas.height = rect.height*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,rect.width,rect.height);
+
+    const W = rect.width, H = rect.height, pad = 6;
+    const closes = candles.map(c=>c.close);
+    const xFor = i => pad + (i/(candles.length-1))*(W-pad*2);
+
+    if(type==='rsi'){
+      const rsi = Indicators.rsi(closes,14);
+      const yFor = v => pad + (1-v/100)*(H-pad*2);
+      // Zones
+      ctx.fillStyle='#ef444415'; ctx.fillRect(0,yFor(100),W,yFor(70)-yFor(100));
+      ctx.fillStyle='#22c55e15'; ctx.fillRect(0,yFor(30),W,yFor(0)-yFor(30));
+      ctx.strokeStyle='#1f2f4d'; ctx.beginPath();
+      [30,50,70].forEach(v=>{ctx.moveTo(0,yFor(v));ctx.lineTo(W,yFor(v));});
+      ctx.stroke();
+      ctx.strokeStyle='#38bdf8'; ctx.lineWidth=1.5;
+      ctx.beginPath(); let st=false;
+      rsi.forEach((v,i)=>{ if(v==null)return; if(!st){ctx.moveTo(xFor(i),yFor(v));st=true}else ctx.lineTo(xFor(i),yFor(v));});
+      ctx.stroke();
+    }
+
+    if(type==='macd'){
+      const m = Indicators.macd(closes);
+      const vals = [...m.macd, ...m.signal, ...m.hist].filter(v=>v!=null);
+      const lo = Math.min(...vals), hi = Math.max(...vals);
+      const yFor = v => pad + (1-(v-lo)/(hi-lo||1))*(H-pad*2);
+      const y0 = yFor(0);
+      ctx.fillStyle='#7b8ba3';
+      ctx.fillRect(0,y0,W,1);
+      // Histogram
+      m.hist.forEach((v,i)=>{
+        if(v==null)return;
+        ctx.fillStyle = v>=0 ? '#22c55e99' : '#ef444499';
+        const y = yFor(v);
+        ctx.fillRect(xFor(i)-2, Math.min(y,y0), 4, Math.abs(y-y0));
+      });
+      // MACD & signal lines
+      [['macd','#38bdf8'],['signal','#f5c542']].forEach(([k,col])=>{
+        ctx.strokeStyle=col; ctx.lineWidth=1.5;
+        ctx.beginPath(); let st=false;
+        m[k].forEach((v,i)=>{ if(v==null)return; if(!st){ctx.moveTo(xFor(i),yFor(v));st=true}else ctx.lineTo(xFor(i),yFor(v));});
+        ctx.stroke();
       });
     }
+  }
 
-    async function fetchIran() {
-      const res = await fetch(IRAN_API);
-      if (!res.ok) throw new Error(`iran ${res.status}`);
-      const j = await res.json();
-      const r = j.rates || {};
-      const c = j.change || {};
-      const t = j.time || null;
+  return { render, renderIndicator };
+})();
 
-      const map = [
-        ['dollar', 'دلار آمریکا', 'IR-USD'],
-        ['gold',   'طلای ۱۸ عیار', 'IR-GOLD'],
-        ['emami',  'سکه امامی',     'IR-COIN'],
-      ];
-      for (const [key, label, id] of map) {
-        if (r[key] == null) continue;
-        upsert(id, {
-          symbol: id, label, unit: 'تومان', kind: 'ir', tag: 'Iran',
-          price: r[key],
-          change: c[key] != null ? Number(c[key]) : null,
-          time: t || null,
-        });
+/* ── 10. VIEWS ─────────────────────────────────────────────── */
+const Views = {
+
+  /* ---------- MARKET ---------- */
+  market(container, filter='all'){
+    const tags = ['all','gold','oil','fx','iran','crypto','metal'];
+    const chips = tags.map(t =>
+      U.el('button',{class:`chip${t===filter?' active':''}`, onclick:()=>Router.go('market',{filter:t})},
+        TAG_LABELS[t]||t));
+    container.innerHTML = '';
+    container.appendChild(
+      U.el('div',{},
+        U.el('h2',{class:'view-title'},'بازار لحظه‌ای'),
+        U.el('div',{class:'filters'}, ...chips)
+      )
+    );
+    const grid = U.el('div',{class:'grid', id:'market-grid'});
+    container.appendChild(grid);
+    renderMarketGrid(grid, filter);
+  },
+
+  /* ---------- CHART ---------- */
+  chart(container, opts={}){
+    const symbol = opts.symbol || 'XAUUSD';
+    const tf = opts.tf || '5m';
+    const allSyms = Object.keys(REGISTRY);
+    const tfs = ['1m','5m','15m','1h','4h','1d'];
+    container.innerHTML = '';
+    const symChips = U.el('div',{class:'chart-controls'},
+      ...allSyms.map(s=>U.el('button',{
+        class:`chip${s===symbol?' active':''}`,
+        onclick:()=>Router.go('chart',{symbol:s,tf})
+      }, s)));
+    const tfChips = U.el('div',{class:'chart-controls'},
+      ...tfs.map(t=>U.el('button',{
+        class:`chip${t===tf?' active':''}`,
+        onclick:()=>Router.go('chart',{symbol,tf:t})
+      }, t)));
+
+    const canvas = U.el('canvas',{class:'chart-canvas',id:'main-chart'});
+    const legend = U.el('div',{class:'chart-legend', id:'chart-legend'});
+    const frame = U.el('div',{class:'chart-frame'}, canvas, legend);
+
+    const indCanvas = U.el('canvas',{id:'ind-canvas'});
+    const indPanel = U.el('div',{class:'indicator-panel'}, indCanvas);
+
+    const indBtns = ['SMA20','EMA50','BB','RSI','MACD'].map(name=>{
+      const key = name.toLowerCase();
+      return U.el('button',{
+        class:'chip',
+        onclick:(e)=>{
+          e.target.classList.toggle('active');
+          renderChart();
+        },
+        dataset:{ind:key}
+      }, name);
+    });
+    container.append(
+      U.el('h2',{class:'view-title'},'نمودار ', U.el('span',{class:'badge'},symbol)),
+      symChips, tfChips, frame, indPanel,
+      U.el('div',{class:'chart-controls',style:{marginTop:'12px'}}, ...indBtns)
+    );
+
+    async function renderChart(){
+      const candles = await TimeSeries.getCandles(symbol, tf, 200);
+      const active = new Set(U.$$('.chip.active[data-ind]', container).map(b=>b.dataset.ind));
+      Chart.render(canvas, candles, {
+        sma20: active.has('sma20'),
+        ema50: active.has('ema50'),
+        bollinger: active.has('bb'),
+      });
+      if(active.has('rsi')){ indPanel.hidden=false; Chart.renderIndicator(indCanvas,candles,'rsi'); }
+      else if(active.has('macd')){ indPanel.hidden=false; Chart.renderIndicator(indCanvas,candles,'macd'); }
+      else { indPanel.hidden=true; }
+
+      // Legend
+      if(candles.length){
+        const last = candles[candles.length-1];
+        const prev = candles[candles.length-2] || last;
+        const chg = ((last.close-prev.close)/prev.close*100);
+        legend.innerHTML = `<span>O <b>${U.fmt(last.open,2)}</b></span>
+          <span>H <b>${U.fmt(last.high,2)}</b></span>
+          <span>L <b>${U.fmt(last.low,2)}</b></span>
+          <span>C <b style="color:${chg>=0?'#22c55e':'#ef4444'}">${U.fmt(last.close,2)}</b></span>`;
       }
     }
 
-    // ---------- Orchestrator ----------
-    async function refreshAll() {
-      setStatus(false, 'در حال دریافت…');
-      const results = await Promise.allSettled([
-        fetchBiquote(),
-        fetchIran(),
-      ]);
-      // fallback طلا
-      try { await fetchGoldFallback(); } catch (_) {}
+    // Mouse tracking for crosshair
+    canvas.addEventListener('pointermove',(e)=>{
+      const r = canvas.getBoundingClientRect();
+      canvas._mouse = { x: e.clientX-r.left, y: e.clientY-r.top };
+      const candles = canvas._renderParams?.candles;
+      if(candles) Chart.render(canvas, candles, {
+        sma20: U.$$('.chip.active[data-ind="sma20"]',container).length>0,
+        ema50: U.$$('.chip.active[data-ind="ema50"]',container).length>0,
+        bollinger: U.$$('.chip.active[data-ind="bb"]',container).length>0,
+      });
+    });
+    canvas.addEventListener('pointerleave',()=>{ canvas._mouse=null; renderChart(); });
 
-      const ok = results.filter(r => r.status === 'fulfilled').length;
-      setStatus(ok > 0, ok > 0 ? 'زنده' : 'خطا در اتصال');
-      lastUpdateEl.textContent = `آخرین تلاش: ${new Date().toLocaleTimeString('fa-IR')}`;
-      render();
+    renderChart();
+    const unsub = Bus.on('refresh', renderChart);
+    return ()=>unsub();
+  },
+
+  /* ---------- PORTFOLIO ---------- */
+  async portfolio(container){
+    container.innerHTML = '';
+    const items = await DB.all('portfolio');
+    const prices = new Map(DataService.all().map(p=>[p.symbol,p.price]));
+
+    let totalCost = 0, totalValue = 0;
+    const enriched = items.map(p=>{
+      const cur = prices.get(p.symbol) || p.buyPrice;
+      const val = cur * p.amount;
+      const cost = p.buyPrice * p.amount;
+      totalCost += cost; totalValue += val;
+      return { ...p, cur, val, cost, pnl: val-cost, pnlPct: ((val-cost)/cost*100) };
+    }).sort((a,b)=>b.val-a.val);
+
+    const pnl = totalValue - totalCost;
+    const pnlPct = totalCost>0 ? (pnl/totalCost*100) : 0;
+
+    const summary = U.el('div',{class:'summary-grid'},
+      U.el('div',{class:'summary-card'},
+        U.el('div',{class:'summary-label'},'ارزش کل'),
+        U.el('div',{class:'summary-value'}, U.fmt(totalValue,0)),
+        U.el('div',{class:'summary-sub',style:{color:'var(--muted)'}},`${items.length} دارایی`)
+      ),
+      U.el('div',{class:'summary-card'},
+        U.el('div',{class:'summary-label'},'سود / زیان'),
+        U.el('div',{class:'summary-value',style:{color:pnl>=0?'var(--up)':'var(--down)'}}, U.fmt(pnl,0)),
+        U.el('div',{class:'summary-sub',style:{color:pnl>=0?'var(--up)':'var(--down)',direction:'ltr',textAlign:'right'}}, U.pct(pnlPct))
+      )
+    );
+
+    const pie = U.el('div',{class:'pie-wrap'},
+      enriched.length ? U.el('canvas',{width:240,height:240,id:'pie-canvas'}) : U.el('div',{style:{color:'var(--muted)',fontSize:'12px'}},'هنوز دارایی اضافه نکردی')
+    );
+
+    const list = U.el('div',{},
+      ...enriched.map(p=>{
+        return U.el('div',{class:'position'},
+          U.el('div',{class:'position-info'},
+            U.el('div',{class:'position-sym'}, p.symbol),
+            U.el('div',{class:'position-amount'}, `${p.amount} × ${U.fmt(p.buyPrice,2)} → ${U.fmt(p.cur,2)}`)
+          ),
+          U.el('div',{class:'position-pnl'},
+            U.el('div',{class:'pnl-val',style:{color:p.pnl>=0?'var(--up)':'var(--down)'}}, U.fmt(p.pnl,0)),
+            U.el('div',{class:'pnl-pct',style:{color:p.pnl>=0?'var(--up)':'var(--down)'}}, U.pct(p.pnlPct))
+          ),
+          U.el('button',{class:'del-btn',onclick:async()=>{
+            await DB.del('portfolio', p.id);
+            Router.go('portfolio');
+          }}, '✕')
+        );
+      })
+    );
+
+    const addBtn = U.el('button',{class:'btn-primary',onclick:()=>openAddPosition()},'➕ افزودن دارایی');
+
+    container.append(
+      U.el('h2',{class:'view-title'},'پورتفولیو'),
+      summary, pie, list, addBtn
+    );
+
+    // Render pie
+    if(enriched.length){
+      drawPie(U.$('#pie-canvas',container), enriched.map(p=>({label:p.symbol,value:p.val})));
     }
+  },
 
-    // ---------- Boot ----------
-    document.getElementById('refreshBtn').addEventListener('click', refreshAll);
+  /* ---------- ALERTS ---------- */
+  async alerts(container){
+    container.innerHTML = '';
+    const items = await DB.all('alerts');
+    const list = U.el('div',{},
+      items.length ? items.map(a=>U.el('div',{class:'alert-item'},
+        U.el('div',{class:'alert-desc'},
+          U.el('span',{class:'sym'}, a.symbol),
+          U.el('div',{class:'cond'}, a.desc),
+        ),
+        U.el('button',{class:`alert-toggle ${a.enabled?'on':'off'}`,onclick:async()=>{
+          a.enabled = !a.enabled;
+          await DB.put('alerts',a);
+          Router.go('alerts');
+        }}, a.enabled?'🔔':'🔕'),
+        U.el('button',{class:'del-btn',onclick:async()=>{
+          await DB.del('alerts',a.id);
+          Router.go('alerts');
+        }}, '✕')
+      )) : [U.el('div',{style:{color:'var(--muted)',padding:'20px',textAlign:'center'}},'هشدار فعالی نداری')]
+    );
 
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').catch(() => {});
+    container.append(
+      U.el('h2',{class:'view-title'},'هشدار قیمت'),
+      list,
+      U.el('button',{class:'btn-primary',onclick:()=>openAddAlert()},'➕ هشدار جدید')
+    );
+  },
+
+  /* ---------- SETTINGS ---------- */
+  async settings(container){
+    container.innerHTML = '';
+    const notif = await DB.settingsGet('notifications', false);
+
+    container.append(
+      U.el('h2',{class:'view-title'},'تنظیمات'),
+      U.el('div',{class:'setting-row'},
+        U.el('div',{class:'setting-info'},
+          U.el('h4',{},'اعلان‌ها'),
+          U.el('p',{},'دریافت پوش نوتیفیکیشن برای هشدارها')
+        ),
+        U.el('div',{class:`switch ${notif?'on':''}`,onclick:async()=>{
+          const next = !notif;
+          if(next && 'Notification' in window){
+            const p = await Notification.requestPermission();
+            if(p!=='granted') return;
+          }
+          await DB.settingsSet('notifications',next);
+          Router.go('settings');
+        }})
+      ),
+      U.el('div',{class:'setting-row'},
+        U.el('div',{class:'setting-info'},
+          U.el('h4',{},'پاک‌کردن داده'),
+          U.el('p',{},'حذف کل تاریخچه، پورتفولیو و هشدارها')
+        ),
+        U.el('button',{class:'btn-secondary',style:{width:'auto',padding:'8px 14px'},onclick:async()=>{
+          if(confirm('مطمئنی؟ همه داده پاک می‌شه.')){
+            await DB.clear();
+            location.reload();
+          }
+        }},'پاک‌کردن')
+      ),
+      U.el('div',{class:'setting-row'},
+        U.el('div',{class:'setting-info'},
+          U.el('h4',{},'نسخه'),
+          U.el('p',{},CONFIG.version + ' — Razian Price')
+        )
+      )
+    );
+  },
+};
+
+/* ── 11. RENDERERS (market grid + pie) ─────────────────────── */
+function renderMarketGrid(grid, filter){
+  const all = DataService.all();
+  const filtered = filter==='all' ? all : all.filter(p=>{
+    const r = REGISTRY[p.symbol];
+    return r && r.tag===filter;
+  });
+  const order = Object.keys(REGISTRY);
+  filtered.sort((a,b)=>{
+    const ia = order.indexOf(a.symbol), ib = order.indexOf(b.symbol);
+    return ia-ib;
+  });
+
+  grid.innerHTML = '';
+  if(!filtered.length){
+    grid.appendChild(U.el('div',{style:{color:'var(--muted)',padding:'20px',gridColumn:'1/-1',textAlign:'center'}},'در حال بارگذاری…'));
+    return;
+  }
+
+  filtered.forEach(p=>{
+    const r = REGISTRY[p.symbol];
+    if(!r) return;
+    const chg = p.change;
+    const cls = U.changeClass(chg);
+    const price = U.price(p.symbol, p.price);
+    const chgText = chg==null ? '—' : U.pct(chg);
+    const card = U.el('div',{class:'card',onclick:()=>Router.go('chart',{symbol:p.symbol,tf:'5m'})},
+      U.el('div',{class:'card-top'},
+        U.el('span',{class:'card-sym'},p.symbol),
+        U.el('span',{class:'card-tag'},TAG_LABELS[r.tag]||r.tag)
+      ),
+      U.el('div',{class:'card-name'},r.name),
+      U.el('div',{class:'card-price'},price),
+      U.el('span',{class:`card-change ${cls}`},chgText),
+      U.el('div',{class:'card-spark',id:`spark-${p.symbol}`})
+    );
+    grid.appendChild(card);
+    // sparkline async
+    TimeSeries.getCandles(p.symbol,'1m',30).then(c=>{
+      const el = U.$(`#spark-${p.symbol}`);
+      if(el && c.length>1) drawSpark(el, c.map(x=>x.close));
+    }).catch(()=>{});
+  });
+}
+
+function drawSpark(container, values){
+  const canvas = document.createElement('canvas');
+  const r = container.getBoundingClientRect();
+  canvas.width = r.width*2; canvas.height = 56;
+  canvas.style.width='100%'; canvas.style.height='28px';
+  container.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  ctx.scale(2,2);
+  const W=canvas.width/2, H=canvas.height/2;
+  const lo = Math.min(...values), hi = Math.max(...values);
+  const range = hi-lo || 1;
+  const up = values[values.length-1] >= values[0];
+  ctx.strokeStyle = up?'#22c55e':'#ef4444';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  values.forEach((v,i)=>{
+    const x = (i/(values.length-1))*W;
+    const y = H - ((v-lo)/range)*H*0.85 - H*0.05;
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+}
+
+function drawPie(canvas, data){
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W/2, cy = H/2, r = Math.min(W,H)/2 - 10;
+  const total = data.reduce((s,d)=>s+d.value,0);
+  const colors = ['#f5c542','#38bdf8','#a78bfa','#22c55e','#ef4444','#fb923c','#ec4899','#14b8a6'];
+  let angle = -Math.PI/2;
+  data.forEach((d,i)=>{
+    const slice = (d.value/total)*Math.PI*2;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,angle,angle+slice);
+    ctx.closePath();
+    ctx.fillStyle = colors[i%colors.length];
+    ctx.fill();
+    angle += slice;
+  });
+  // Donut hole
+  ctx.globalCompositeOperation='destination-out';
+  ctx.beginPath();
+  ctx.arc(cx,cy,r*0.55,0,Math.PI*2);
+  ctx.fill();
+  ctx.globalCompositeOperation='source-over';
+  // Center text
+  ctx.fillStyle='#e8eef9';
+  ctx.font='bold 14px Tahoma';
+  ctx.textAlign='center';
+  ctx.fillText(U.fmt(total,0), cx, cy-2);
+  ctx.fillStyle='#7b8ba3';
+  ctx.font='10px Tahoma';
+  ctx.fillText('ارزش', cx, cy+14);
+}
+
+/* ── 12. MODALS ────────────────────────────────────────────── */
+function openModal(content){
+  const root = document.getElementById('modal-root');
+  const overlay = U.el('div',{class:'modal-overlay',onclick:(e)=>{
+    if(e.target===overlay) closeModal();
+  }}, U.el('div',{class:'modal'}, content));
+  root.appendChild(overlay);
+  return overlay;
+}
+function closeModal(){
+  document.getElementById('modal-root').innerHTML = '';
+}
+
+function openAddPosition(){
+  const symbols = Object.keys(REGISTRY);
+  const symSel = U.el('select',{class:'form-select'}, ...symbols.map(s=>U.el('option',{value:s},`${s} — ${REGISTRY[s].name}`)));
+  const amountIn = U.el('input',{class:'form-input',type:'number',step:'any',placeholder:'مقدار (تعداد/گرم/واحد)'});
+  const buyIn = U.el('input',{class:'form-input',type:'number',step:'any',placeholder:'قیمت خرید'});
+
+  openModal(U.el('div',{},
+    U.el('div',{class:'modal-header'},
+      U.el('div',{class:'modal-title'},'افزودن دارایی'),
+      U.el('button',{class:'modal-close',onclick:closeModal},'×')
+    ),
+    U.el('div',{class:'form-group'},
+      U.el('label',{class:'form-label'},'نماد'), symSel),
+    U.el('div',{class:'form-group'},
+      U.el('label',{class:'form-label'},'مقدار'), amountIn),
+    U.el('div',{class:'form-group'},
+      U.el('label',{class:'form-label'},'قیمت خرید'), buyIn),
+    U.el('button',{class:'btn-primary',onclick:async()=>{
+      const amt = Number(amountIn.value);
+      const buy = Number(buyIn.value);
+      if(!amt||!buy) return alert('مقدار و قیمت را وارد کن');
+      await DB.put('portfolio',{
+        id: U.uuid(), symbol: symSel.value, amount: amt, buyPrice: buy, addedAt: Date.now(),
+      });
+      closeModal();
+      Router.go('portfolio');
+    }},'ذخیره')
+  ));
+}
+
+function openAddAlert(){
+  const symbols = Object.keys(REGISTRY);
+  const symSel = U.el('select',{class:'form-select'}, ...symbols.map(s=>U.el('option',{value:s},`${s} — ${REGISTRY[s].name}`)));
+  const typeSel = U.el('select',{class:'form-select'},
+    U.el('option',{value:'above'},'بالاتر از'),
+    U.el('option',{value:'below'},'پایین‌تر از'),
+    U.el('option',{value:'pct_up'},'درصد رشد از الان'),
+    U.el('option',{value:'pct_down'},'درصد افت از الان')
+  );
+  const valIn = U.el('input',{class:'form-input',type:'number',step:'any',placeholder:'مقدار'});
+
+  openModal(U.el('div',{},
+    U.el('div',{class:'modal-header'},
+      U.el('div',{class:'modal-title'},'هشدار جدید'),
+      U.el('button',{class:'modal-close',onclick:closeModal},'×')
+    ),
+    U.el('div',{class:'form-group'},U.el('label',{class:'form-label'},'نماد'),symSel),
+    U.el('div',{class:'form-group'},U.el('label',{class:'form-label'},'شرط'),typeSel),
+    U.el('div',{class:'form-group'},U.el('label',{class:'form-label'},'مقدار'),valIn),
+    U.el('button',{class:'btn-primary',onclick:async()=>{
+      const v = Number(valIn.value);
+      if(!v) return alert('مقدار را وارد کن');
+      const desc = typeSel.options[typeSel.selectedIndex].text + ' ' + v;
+      await DB.put('alerts',{
+        id: U.uuid(), symbol: symSel.value, type: typeSel.value, value: v,
+        desc, enabled: true, createdAt: Date.now(), triggered: false,
+      });
+      closeModal();
+      Router.go('alerts');
+    }},'ذخیره')
+  ));
+}
+
+/* ── 13. ALERTS ENGINE ─────────────────────────────────────── */
+async function checkAlerts(){
+  const alerts = await DB.all('alerts');
+  const enabled = alerts.filter(a=>a.enabled && !a.triggered);
+  if(!enabled.length) return;
+  let changed = false;
+  for(const a of enabled){
+    const p = DataService.get(a.symbol);
+    if(!p || p.price==null) continue;
+    let triggered = false;
+    if(a.type==='above' && p.price >= a.value) triggered=true;
+    if(a.type==='below' && p.price <= a.value) triggered=true;
+    if((a.type==='pct_up'||a.type==='pct_down') && p.change!=null){
+      if(a.type==='pct_up' && p.change >= a.value) triggered=true;
+      if(a.type==='pct_down' && p.change <= -a.value) triggered=true;
     }
+    if(triggered){
+      a.triggered = true;
+      a.triggeredAt = Date.now();
+      await DB.put('alerts',a);
+      changed = true;
+      const title = `Razian — ${a.symbol}`;
+      const body = `${a.desc} (الان: ${U.price(a.symbol,p.price)})`;
+      if((await DB.settingsGet('notifications',false)) && Notification.permission==='granted'){
+        try { new Notification(title,{body,icon:'/icons/razian-192.png'}); } catch(_){}
+      }
+    }
+  }
+  if(changed) Bus.emit('alerts-updated');
+}
 
-    refreshAll();
-    setInterval(refreshAll, 10000); // هر ۱۰ ثانیه
-  </script>
+/* ── 14. ROUTER ────────────────────────────────────────────── */
+const Router = (()=>{
+  let current = 'market';
+  let params = {};
+  let cleanup = null;
+  const root = document.getElementById('view-root');
+
+  async function go(tab, p={}){
+    if(cleanup){ try{cleanup()}catch(_){}; cleanup=null; }
+    current = tab; params = p;
+
+    // Update tab bar
+    U.$$('.tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===tab));
+
+    // Update URL
+    const qs = new URLSearchParams(p).toString();
+    history.replaceState(null,'',`?tab=${tab}${qs?'&'+qs:''}`);
+
+    root.innerHTML = '';
+    try {
+      const r = Views[tab](root, p);
+      if(typeof r === 'function') cleanup = r;
+      else if(r && typeof r.then==='function'){
+        const res = await r;
+        if(typeof res==='function') cleanup = res;
+      }
+    } catch(e){ console.error('[Router]',e); root.innerHTML = '<p style="color:#ef4444">خطا در بارگذاری</p>'; }
+
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function init(){
+    U.$$('.tab').forEach(t=>t.addEventListener('click',()=>go(t.dataset.tab)));
+    const q = new URLSearchParams(location.search);
+    const tab = q.get('tab') || 'market';
+    const p = {};
+    for(const [k,v] of q.entries()) if(k!=='tab') p[k]=v;
+    go(tab, p);
+  }
+
+  return { go, init };
+})();
+
+/* ── 15. SERVICE WORKER + MANIFEST via blob ────────────────── */
+function setupPWA(){
+  // Manifest via blob
+  try {
+    const manifest = {
+      name:'Razian Price — بازار لحظه‌ای',
+      short_name:'Razian',
+      description:'قیمت لحظه‌ای طلا، نفت، ارز، رمزارز و بازار ایران',
+      start_url:'./',
+      scope:'./',
+      display:'standalone',
+      background_color:'#0a0f1c',
+      theme_color:'#0a0f1c',
+      lang:'fa',
+      dir:'rtl',
+      icons:[
+        {src:"data:image/svg+xml,"+encodeURIComponent(
+          "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='96' fill='#0a0f1c'/><text x='256' y='340' font-size='280' text-anchor='middle' font-weight='900' font-family='Tahoma' fill='#f5c542'>R</text></svg>"
+        ),sizes:'512x512',type:'image/svg+xml',purpose:'any maskable'}
+      ]
+    };
+    const blob = new Blob([JSON.stringify(manifest)],{type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('link');
+    link.rel='manifest'; link.href=url;
+    document.head.appendChild(link);
+  } catch(e){ console.warn('[manifest]',e); }
+
+  // SW via blob (may be restricted in some browsers)
+  if('serviceWorker' in navigator){
+    const swCode = `
+      const CACHE='razian-v1';
+      self.addEventListener('install',e=>self.skipWaiting());
+      self.addEventListener('activate',e=>self.clients.claim());
+      self.addEventListener('fetch',e=>{
+        if(e.request.method!=='GET')return;
+        e.respondWith(
+          caches.match(e.request).then(c=>c||fetch(e.request).then(r=>{
+            if(r.ok && new URL(e.request.url).origin===location.origin){
+              caches.open(CACHE).then(c=>c.put(e.request,r.clone()));
+            }
+            return r;
+          }).catch(()=>caches.match(e.request)))
+        );
+      });
+    `;
+    const blob = new Blob([swCode],{type:'application/javascript'});
+    navigator.serviceWorker.register(URL.createObjectURL(blob),{scope:'./'})
+      .then(reg=>{
+        console.log('[sw] registered');
+        reg.addEventListener('updatefound',()=>{
+          const w = reg.installing;
+          w?.addEventListener('statechange',()=>{
+            if(w.state==='installed' && navigator.serviceWorker.controller){
+              document.getElementById('update-prompt').hidden = false;
+              document.getElementById('reload-btn').onclick = ()=>{
+                w.postMessage({type:'SKIP_WAITING'});
+                location.reload();
+              };
+            }
+          });
+        });
+      })
+      .catch(e=>console.warn('[sw] registration failed (non-fatal):',e.message));
+  }
+}
+
+/* ── 16. INIT ──────────────────────────────────────────────── */
+async function init(){
+  setupPWA();
+
+  // Connectivity indicator
+  const dot = document.getElementById('conn-dot');
+  const txt = document.getElementById('conn-text');
+  const banner = document.getElementById('offline-banner');
+
+  function setOnline(on){
+    dot.classList.toggle('live', on);
+    txt.textContent = on ? 'زنده' : 'آفلاین';
+    banner.hidden = on;
+  }
+  window.addEventListener('online', ()=>setOnline(true));
+  window.addEventListener('offline', ()=>setOnline(false));
+  setOnline(navigator.onLine);
+
+  Bus.on('status', s=>{
+    if(s==='live') setOnline(true);
+    else if(s==='error') setOnline(false);
+  });
+
+  // Load from cache first
+  await DataService.hydrateFromDB();
+  Router.init();
+
+  // Refresh from network
+  DataService.refreshAll();
+  setInterval(()=>DataService.refreshAll(), CONFIG.refreshMs);
+
+  // Alerts check (every refresh)
+  Bus.on('refresh', ()=>checkAlerts());
+
+  // Price → re-render market grid live
+  Bus.on('price', U.debounce(()=>{
+    const grid = document.getElementById('market-grid');
+    if(grid && location.search.includes('tab=market')) {
+      const q = new URLSearchParams(location.search);
+      renderMarketGrid(grid, q.get('filter')||'all');
+    }
+  }, 400));
+
+  // Housekeeping
+  setInterval(()=>TimeSeries.pruneOld().catch(()=>{}), 3_600_000);
+  TimeSeries.pruneOld().catch(()=>{});
+
+  console.log('[Razian] ready — v'+CONFIG.version);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
 </body>
 </html>
