@@ -100,19 +100,6 @@ nav em { display: block; font-style: normal; font-size: 20px; margin-bottom: 2px
 #bk::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, #0b0d14 0%, transparent 100%); }
 #dp { padding: 0 20px; margin-top: -40px; position: relative; z-index: 2; }
 .close-sheet-btn { position: absolute; top: 16px; left: 16px; z-index: 10; width: 38px; height: 38px; border-radius: 50%; background: rgba(0,0,0,0.7); border: 1px solid var(--glass-border); color: #fff; font-size: 16px; cursor: pointer; }
-
-/* استایل باکس دانلود */
-.download-box-title { font-size: 18px; font-weight: 900; margin: 20px 0 12px; color: var(--gold-neon); border-right: 4px solid var(--gold-neon); padding-right: 10px; }
-.dl-item { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--glass-border); border-radius: 16px; padding: 14px; margin-bottom: 12px; }
-.dl-info { font-size: 13.5px; font-weight: 700; margin-bottom: 10px; color: #e2e8f0; display: flex; justify-content: space-between; }
-.dl-btns { display: flex; gap: 8px; }
-.btn-stream { flex: 1; background: var(--gold-neon); color: #000; font-weight: 800; border: 0; padding: 10px; border-radius: 12px; font-size: 13px; cursor: pointer; text-align: center; }
-.btn-dl { flex: 1; background: rgba(255, 255, 255, 0.1); color: #fff; font-weight: 800; border: 1px solid var(--glass-border); padding: 10px; border-radius: 12px; font-size: 13px; cursor: pointer; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; }
-
-/* پنجره پخش هوشمند / Stream Modal */
-#streamModal { display: none; position: fixed; inset: 0; z-index: 99; background: #000; flex-direction: column; }
-#streamModal .modal-header { position: absolute; top: 0; left: 0; right: 0; z-index: 100; padding: 14px 20px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); display: flex; justify-content: space-between; align-items: center; }
-#streamFrame { width: 100%; height: 100%; border: 0; }
 </style>
 </head>
 <body>
@@ -160,15 +147,6 @@ nav em { display: block; font-style: normal; font-size: 20px; margin-bottom: 2px
 
 <div id="sheet"><div id="box"></div></div>
 
-<!-- مودال پخش هوشمند لینک‌های سایت‌های مرجع -->
-<div id="streamModal">
-  <div class="modal-header">
-    <span id="streamTitle" style="font-size:14px; font-weight:800; color:#fff;">پخش آنلاین</span>
-    <button onclick="closeStream()" style="background:rgba(255,255,255,0.2); border:0; color:#fff; font-size:16px; width:36px; height:36px; border-radius:50%; cursor:pointer;">✕</button>
-  </div>
-  <iframe id="streamFrame" allowfullscreen allow="autoplay"></iframe>
-</div>
-
 <script>
 const KEY="cd65492fbd32cf466b7fa317f1a57cbc";
 const BASE="https://api.themoviedb.org/3";
@@ -176,19 +154,6 @@ const IM="https://image.tmdb.org/t/p/";
 const api=(p,x="",l="fa-IR")=>fetch(`${BASE}${p}?api_key=${KEY}&language=${l}${x}`).then(r=>r.json());
 const $=id=>document.getElementById(id);
 const yr=m=>(m.release_date||m.first_air_date||"").slice(0,4);
-
-let currentMovieId = null;
-
-// دیتابیس لینک‌های اختصاصی فیلم‌ها (لینک همون سایت مرجع پخش آنلاین)
-const movieLinksDB = {
-  // مثال: شناسه فیلم اسپایدرمن و لینک اختصاصی پخش آنلاینی که فرستادی
-  "634649": {
-    "1080p": "https://www.myf2ms.top/76906/spider-man-brand-new-day/?playit=c4b7c39ef4abe0a2a825ceedefbcb5a5&play_type=dubbled&quality=WEB-DL%201080p%2010bit%20x265&type=movies&id=76906"
-  },
-  "default": {
-    "1080p": "https://www.myf2ms.top/76906/spider-man-brand-new-day/?playit=c4b7c39ef4abe0a2a825ceedefbcb5a5&play_type=dubbled&quality=WEB-DL%201080p%2010bit%20x265&type=movies&id=76906"
-  }
-};
 
 function card(m,type){
   const t=m.media_type&&m.media_type!=="person"?m.media_type:type;
@@ -204,21 +169,22 @@ function card(m,type){
 }
 
 async function loadHero(){
-  const d=await api("/trending/movie/week");
-  const hs=d.results.filter(m=>m.poster_path&&m.backdrop_path).slice(0,5);
-  $("flow").innerHTML=hs.map(m=>`
-    <div class="fc" style="background-image:url(${IM}w1280${m.backdrop_path})" onclick="showDetail('movie',${m.id})">
-      <div class="hero-info-overlay">
-        <div class="hero-tag-row">
-          <span class="tag-gold">★ ${(m.vote_average||0).toFixed(1)}</span>
-          <span class="tag-glass">${yr(m)}</span>
+  const d=api("/trending/movie/week").then(d => {
+    const hs=d.results.filter(m=>m.poster_path&&m.backdrop_path).slice(0,5);
+    $("flow").innerHTML=hs.map(m=>`
+      <div class="fc" style="background-image:url(${IM}w1280${m.backdrop_path})" onclick="showDetail('movie',${m.id})">
+        <div class="hero-info-overlay">
+          <div class="hero-tag-row">
+            <span class="tag-gold">★ ${(m.vote_average||0).toFixed(1)}</span>
+            <span class="tag-glass">${yr(m)}</span>
+          </div>
+          <h1 class="hero-main-title">${m.title}</h1>
+          <p class="hero-desc-text">${m.overview||""}</p>
+          <button class="btn-neon-play" onclick="event.stopPropagation(); showDetail('movie',${m.id})">مشاهده جزئیات</button>
         </div>
-        <h1 class="hero-main-title">${m.title}</h1>
-        <p class="hero-desc-text">${m.overview||""}</p>
-        <button class="btn-neon-play" onclick="event.stopPropagation(); showDetail('movie',${m.id})">▶ دریافت لینک‌ها و پخش</button>
       </div>
-    </div>
-  `).join("");
+    `).join("");
+  }).catch(()=>{});
 }
 
 async function addRow(title,path,type,x=""){
@@ -242,7 +208,6 @@ function openAll(title,path,type,x){
 function closeAll(){ $("pAll").style.display="none"; }
 
 async function showDetail(type,id){
-  currentMovieId = id;
   $("sheet").style.display="block"; document.body.style.overflow="hidden";
   $("box").innerHTML=`<div class="empty">در حال دریافت اطلاعات فیلم...</div>`;
   try{
@@ -259,42 +224,8 @@ async function showDetail(type,id){
           <span class="tag-glass">${yr(m)}</span>
         </div>
         <p style="color:var(--text-sub);font-size:13.5px;line-height:1.9">${m.overview||"خلاصه داستان ثبت نشده است."}</p>
-        
-        <div class="download-box-title">📥 باکس دانلود و پخش آنلاین</div>
-        
-        <div class="dl-item">
-          <div class="dl-info"><span>کیفیت : WEB-DL 1080p</span><span>دوبله فارسی</span></div>
-          <div class="dl-btns">
-            <button class="btn-stream" onclick="playWebStream('${title}','1080p')">▶ پخش آنلاین</button>
-            <a class="btn-dl" href="#" onclick="alert('شروع دانلود کیفیت 1080p'); return false;">دانلود مستقیم</a>
-          </div>
-        </div>
-
-        <div class="dl-item">
-          <div class="dl-info"><span>کیفیت : WEB-DL 720p</span><span>دوبله فارسی</span></div>
-          <div class="dl-btns">
-            <button class="btn-stream" onclick="playWebStream('${title}','720p')">▶ پخش آنلاین</button>
-            <a class="btn-dl" href="#" onclick="alert('شروع دانلود کیفیت 720p'); return false;">دانلود مستقیم</a>
-          </div>
-        </div>
-
       </div>`;
   }catch(e){$("box").innerHTML=`<div class="empty">خطایی رخ داد.</div>`;}
-}
-
-/* تابع هوشمند برای لود کردن لینک‌های پخش آنلاین سایت‌های مرجع */
-function playWebStream(title, quality) {
-  const links = movieLinksDB[currentMovieId] || movieLinksDB["default"];
-  const targetUrl = links[quality] || links["1080p"];
-  
-  $("streamTitle").textContent = title + " (" + quality + ")";
-  $("streamFrame").src = targetUrl;
-  $("streamModal").style.display = "flex";
-}
-
-function closeStream() {
-  $("streamFrame").src = "";
-  $("streamModal").style.display = "none";
 }
 
 function closeSheet(){ $("sheet").style.display="none"; document.body.style.overflow=""; }
