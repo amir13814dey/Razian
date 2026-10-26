@@ -51,6 +51,14 @@ header{padding:calc(env(safe-area-inset-top,0px) + 18px) 20px 6px;display:flex;j
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 10px;padding:14px 16px 20px}
 .grid .card{width:auto}
 
+/* تکه ۱: استایل سینمای آزاد */
+.ia{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 10px;padding:14px 16px 20px}
+#pv{position:fixed;inset:0;z-index:40;background:#000;display:none;flex-direction:column}
+#pv video{width:100%;max-height:60vh;background:#000}
+#pv .bar{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+#pv h4{margin:0;font-size:15px}
+#pv .inf{padding:0 16px 16px;color:var(--mut);font-size:13px;line-height:1.9;overflow-y:auto}
+
 nav{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);right:16px;left:16px;height:68px;border-radius:26px;background:#0d0d12f2;border:1px solid var(--line);backdrop-filter:blur(18px);display:flex;justify-content:space-around;align-items:center;z-index:20}
 nav div{text-align:center;font-size:11px;color:var(--mut);padding:8px 14px;border-radius:18px;transition:.3s}
 nav div.on{background:color-mix(in srgb,var(--a) 20%,transparent);color:var(--a)}
@@ -83,47 +91,6 @@ nav em{display:block;font-style:normal;font-size:21px}
 .deco{position:absolute;inset:0;pointer-events:none;z-index:1}
 .deco>*{position:absolute}
 .web path{stroke:#fff;stroke-opacity:.6;fill:none;stroke-width:1.2}
-
-/* ===== استایل‌های پلیر ویدیو و دکمه‌ها ===== */
-#player-container {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16/9;
-  background: #000;
-  border-radius: 16px;
-  overflow: hidden;
-  margin: 14px 0;
-  box-shadow: 0 10px 30px #000a;
-}
-#player-container video {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-}
-.quality-selector {
-  display: flex;
-  gap: 8px;
-  margin: 10px 0;
-  flex-wrap: wrap;
-}
-.quality-btn {
-  background: var(--glass);
-  border: 1px solid var(--line);
-  color: #fff;
-  padding: 6px 14px;
-  border-radius: 10px;
-  font-family: inherit;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.quality-btn.active {
-  background: linear-gradient(100deg, var(--a), var(--b));
-  color: #021;
-  font-weight: 800;
-  border: 0;
-}
 
 /* ترسناک */
 .th-horror{--bxbg:#1c0606;--bxbg2:#060000;--ttl:#ff3b3b;--sty:#e6c9c9;--cm:#b98a8a;border-color:#5a0a0a!important}
@@ -168,6 +135,13 @@ footer{text-align:center;color:var(--mut);font-size:12px;padding:30px 0 0}
 </head>
 <body data-t="1">
 <div id="bg"></div><div id="aur"></div>
+
+<!-- تکه ۲: صفحه ی پخش -->
+<div id="pv">
+  <div class="bar"><h4 id="pvT"></h4><button class="back" onclick="closePv()">✕</button></div>
+  <video id="pvV" controls playsinline></video>
+  <div class="inf" id="pvI"></div>
+</div>
 
 <header>
   <div>
@@ -388,12 +362,9 @@ function pickTheme(m,title){
   return {cls:"",deco:""};
 }
 
-/* جزئیات + تریلر + پلیر اختصاصی */
+/* جزئیات + تریلر */
 let TR="";
-let currentMovieId = null;
-
 async function showDetail(type,id){
-  currentMovieId = id;
   $("sheet").style.display="block";document.body.style.overflow="hidden";
   $("box").className="";
   $("box").innerHTML=`<div class="empty">در حال بارگذاری...</div>`;
@@ -420,82 +391,57 @@ async function showDetail(type,id){
         <div><span class="pill">${yr(m)}</span><span class="pill s">★ ${m.vote_average.toFixed(1)}</span>${run}</div>
         <div style="margin:10px 0">${genres}</div>
         <div class="btns" style="justify-content:flex-start;margin:14px 0">
-          <button class="main" onclick="initPlayer('1080p')">▶ تماشای فیلم</button>
-          ${TR?`<button class="main ghost" onclick="playTrailer()">تماشای تریلر</button>`:""}
+          ${TR?`<button class="main" onclick="playTrailer()">▶ تماشای تریلر</button>`:""}
           <button class="main ghost" id="heart" onclick="toggleFav(${id},'${type}','${m.poster_path}','${safe}',${m.vote_average})">${isFav(id)?"❤️":"🤍"}</button>
         </div>
-        <div id="media-box"></div>
         <div id="trl"></div>
         <p class="story">${story}</p>
         ${cast?`<div class="sec" style="margin:20px 0 10px"><b>بازیگران</b><i></i></div><div class="cast">${cast}</div>`:""}
       </div>`;
   }catch(e){$("box").innerHTML=`<div class="empty">خطا در دریافت اطلاعات</div><button class="x" onclick="closeSheet()">✕</button>`}
 }
-
 function playTrailer(){
   const sp=$("box").classList.contains("th-spider");
   $("trl").innerHTML=`<div class="trailer"><iframe src="https://www.youtube.com/embed/${TR}?autoplay=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe></div>${sp?`<div class="tweb">${webSvg()}</div>`:""}`;
 }
+function closeSheet(){$("sheet").style.display="none";$("box").innerHTML="";$("box").className="";document.body.style.overflow=""}
 
-function closeSheet(){
-  $("sheet").style.display="none";
-  $("box").innerHTML="";
-  $("box").className="";
-  document.body.style.overflow="";
+/* تکه ۳: سینمای آزاد - Internet Archive */
+async function addFree(){
+  try{
+    const u="https://archive.org/advancedsearch.php?q="+encodeURIComponent("collection:feature_films AND mediatype:movies")+"&fl[]=identifier&fl[]=title&fl[]=year&sort[]=downloads+desc&rows=24&output=json";
+    const d=await fetch(u).then(r=>r.json());
+    const items=d.response.docs;
+    $("rows").insertAdjacentHTML("afterbegin",`<div class="sec"><b>🎞️ سینمای آزاد</b><i></i></div><div class="row">${items.map(m=>`
+      <div class="card" onclick="playFree('${m.identifier}')">
+        <div class="pw"><img loading="lazy" src="https://archive.org/services/img/${m.identifier}" alt="">
+        <span class="rt">${m.year||""}</span></div>
+        <div class="t">${(m.title||"").replace(/'/g,"")}</div></div>`).join("")}</div>`);
+  }catch(e){}
 }
-
-const sampleMovieLinks = {
-  "1080p": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-  "720p": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-};
-
-function initPlayer(quality) {
-  const videoUrl = sampleMovieLinks[quality] || sampleMovieLinks["720p"];
-  $("media-box").innerHTML = `
-    <div class="quality-selector">
-      <button class="quality-btn ${quality==='1080p'?'active':''}" onclick="initPlayer('1080p')">1080p</button>
-      <button class="quality-btn ${quality==='720p'?'active':''}" onclick="initPlayer('720p')">720p</button>
-    </div>
-    <div id="player-container">
-      <video id="customVideo" controls autoplay playsinline src="${videoUrl}"></video>
-    </div>`;
-
-  const video = $("customVideo");
-  if (!video) return;
-
-  // بازیابی زمان ذخیره شده قبلی (Resume Playback)
-  const storageKey = `rz_time_${currentMovieId}`;
-  const savedTime = localStorage.getItem(storageKey);
-
-  if (savedTime && parseFloat(savedTime) > 5) {
-    video.addEventListener('loadedmetadata', function onMeta() {
-      video.removeEventListener('loadedmetadata', onMeta);
-      const minutes = Math.floor(savedTime / 60);
-      if (confirm(`می‌خواهی فیلم را از دقیقه‌ی ${minutes} ادامه دهی؟`)) {
-        video.currentTime = parseFloat(savedTime);
-      }
-    });
-  }
-
-  // ذخیره خودکار زمان فیلم هنگام تماشا
-  video.addEventListener('timeupdate', () => {
-    if (video.currentTime > 5) {
-      localStorage.setItem(storageKey, video.currentTime);
-    }
-  });
-
-  // پاک کردن زمان ذخیره شده پس از پایان فیلم
-  video.addEventListener('ended', () => {
-    localStorage.removeItem(storageKey);
-  });
+async function playFree(id){
+  $("pv").style.display="flex";$("pvT").textContent="...";$("pvI").textContent="در حال بارگذاری...";
+  try{
+    const m=await fetch("https://archive.org/metadata/"+id).then(r=>r.json());
+    const f=(m.files||[]).filter(x=>/\.mp4$/i.test(x.name)&&x.source!=="original"||/\.mp4$/i.test(x.name))[0];
+    $("pvT").textContent=(m.metadata&&m.metadata.title)||id;
+    if(!f){$("pvI").textContent="ویدیوی قابل پخش پیدا نشد.";return}
+    $("pvV").src="https://archive.org/download/"+id+"/"+encodeURIComponent(f.name);
+    $("pvV").play().catch(()=>{});
+    const ds=(m.metadata&&m.metadata.description)||"";
+    $("pvI").innerHTML=(Array.isArray(ds)?ds.join(" "):ds).replace(/<[^>]+>/g,"").slice(0,500)+
+      `<br><br><a style="color:var(--a)" href="https://archive.org/details/${id}" target="_blank">صفحه‌ی فیلم در Internet Archive (اطلاعات مجوز و گزارش)</a>`;
+  }catch(e){$("pvI").textContent="خطا در بارگذاری. اگه باز نشد VPN رو روشن کن."}
 }
+function closePv(){const v=$("pvV");v.pause();v.removeAttribute("src");v.load();$("pv").style.display="none"}
+addFree();
 
 /* شروع */
 loadHero().catch(()=>{$("msg").textContent="خطا در دریافت اطلاعات. اگه باز نشد VPN رو روشن کن."});
 addRow("🔥 داغ‌ترین فیلم‌ها","/movie/popular","movie");
 addRow("📺 سریال‌های محبوب","/tv/popular","tv");
 addRow("💥 اکشن","/discover/movie","movie","&with_genres=28&sort_by=popularity.desc");
-addRow("🏆 برترین‌ها","/movie/top_rated","movie");
+addRow("🏆 برترین‌ها","/movie/top_rated","movie"); 
 if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}
 </script>
 </body>
