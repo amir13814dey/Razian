@@ -1,10 +1,10 @@
 {
-  "name": "Razian Market Hub",
-  "short_name": "Razian Market",
+  "name": "Razian Quiz Hub",
+  "short_name": "Razian Quiz",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#030407",
-  "theme_color": "#030407",
+  "theme_color": "#6366f1",
   "icons": [
     {
       "src": "icon.png",
