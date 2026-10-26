@@ -3,188 +3,274 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Razian</title>
+<title>Razian Cinema Studio</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#04100d">
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;800&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#030407">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#04100d;--a:#3be8b0;--b:#ffc857;--mut:#9db3ac;--glass:#ffffff12;--line:#ffffff1c}
-body[data-t="2"]{--bg:#12060f;--a:#ff7ab6;--b:#ffb86b;--mut:#bfa3b8}
-body[data-t="3"]{--bg:#060a1a;--a:#7aa2ff;--b:#c78bff;--mut:#a3accc}
+:root {
+  --bg-main: #030407;
+  --card-bg: rgba(255, 255, 255, 0.03);
+  --accent-neon: #6366f1;
+  --accent-glow: rgba(99, 102, 241, 0.4);
+  --gold-neon: #ffb703;
+  --ruby-red: #ff0055;
+  --text-primary: #ffffff;
+  --text-sub: #94a3b8;
+  --glass-bg: rgba(15, 17, 26, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.08);
+}
+
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:var(--bg);color:#fff;font-family:Vazirmatn,Tahoma,sans-serif;padding-bottom:110px;overflow-x:hidden;transition:background .6s}
-body:after{content:"";position:fixed;bottom:0;left:0;right:0;height:100px;background:linear-gradient(#0000,var(--bg) 70%);pointer-events:none;z-index:19}
-#bg{position:fixed;inset:-40px;background-size:cover;background-position:center;filter:blur(50px) saturate(1.5);opacity:.45;transition:background-image .8s;z-index:-2}
-#aur{position:fixed;inset:0;z-index:-1;background:radial-gradient(500px 300px at 15% 10%,color-mix(in srgb,var(--a) 28%,transparent),transparent),radial-gradient(500px 400px at 90% 40%,color-mix(in srgb,var(--b) 18%,transparent),transparent),linear-gradient(#0000,var(--bg) 85%)}
-header{padding:calc(env(safe-area-inset-top,0px) + 18px) 20px 6px;display:flex;justify-content:space-between;align-items:flex-start}
-.logo{font-size:34px;font-weight:800;letter-spacing:1px;direction:ltr;background:linear-gradient(100deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1.1}
-.tag{font-size:13px;color:var(--mut);margin-top:4px;font-weight:300}
-.tag b{color:#fff;font-weight:500}
-.ibtn{width:44px;height:44px;border-radius:14px;background:var(--glass);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:19px;backdrop-filter:blur(10px)}
+body {
+  margin: 0;
+  background: var(--bg-main);
+  color: var(--text-primary);
+  font-family: 'Vazirmatn', Tahoma, sans-serif;
+  padding-bottom: 120px;
+  overflow-x: hidden;
+  user-select: none;
+}
 
-#flow{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:22px 19vw 10px;scrollbar-width:none}
-#flow::-webkit-scrollbar{display:none}
-.fc{flex:0 0 62vw;max-width:260px;aspect-ratio:2/3;border-radius:22px;background-size:cover;background-position:center;scroll-snap-align:center;transition:transform .15s,opacity .15s;box-shadow:0 20px 40px #000a,0 0 0 1px var(--line)}
-#info{padding:6px 22px 0;text-align:center}
-#info h1{margin:6px 0 4px;font-size:23px;font-weight:800}
-#info p{margin:0 auto;color:var(--mut);font-size:13px;line-height:1.9;max-width:420px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.pill{display:inline-block;padding:3px 11px;border-radius:20px;font-size:13px;background:var(--glass);border:1px solid var(--line);margin:0 3px}
-.pill.s{color:#000;background:var(--b);border:0;font-weight:800}
-.btns{display:flex;gap:10px;justify-content:center;margin-top:14px}
-.main{background:linear-gradient(100deg,var(--a),var(--b));color:#021;border:0;font-family:inherit;font-weight:800;font-size:15px;padding:12px 26px;border-radius:16px}
-.ghost{background:var(--glass);color:#fff;border:1px solid var(--line)}
-.sec{margin:30px 20px 12px;display:flex;align-items:center;gap:10px}
-.sec b{font-size:18px;font-weight:800}
-.sec i{flex:1;height:1px;background:linear-gradient(to left,var(--line),transparent)}
-.sec a{font-size:13px;color:var(--a);font-weight:500}
-#chips{display:flex;gap:9px;overflow-x:auto;padding:0 20px 4px;scrollbar-width:none}
-#chips::-webkit-scrollbar{display:none}
-.chip{flex:none;padding:10px 16px;border-radius:30px;background:var(--glass);border:1px solid var(--line);font-size:14px;font-family:inherit;color:#fff}
-.chip.on{background:linear-gradient(100deg,var(--a),var(--b));color:#021;font-weight:800;border:0}
-.row{display:flex;gap:12px;overflow-x:auto;padding:4px 20px 8px;scrollbar-width:none}
-.row::-webkit-scrollbar{display:none}
-.card{flex:none;width:122px}
-.pw{position:relative}
-.pw img{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:16px;background:#ffffff10;display:block;box-shadow:0 8px 18px #0008}
-.rt{position:absolute;bottom:7px;right:7px;background:#000b;backdrop-filter:blur(6px);border-radius:10px;padding:2px 8px;font-size:12px;font-weight:800;color:var(--b)}
-.card .t{margin-top:8px;font-size:12.5px;text-align:center;line-height:1.6;height:40px;overflow:hidden;color:#e8f0ee}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 10px;padding:14px 16px 20px}
-.grid .card{width:auto}
+/* هاله‌های نوری تزیینی پس‌زمینه (Aura Effect) */
+.aura-container {
+  position: fixed; inset: 0; pointer-events: none; z-index: -1; overflow: hidden;
+}
+.aura-1 {
+  position: absolute; top: -100px; right: -50px; width: 350px; height: 350px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, transparent 70%);
+  filter: blur(60px);
+}
+.aura-2 {
+  position: absolute; top: 40%; left: -100px; width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(255, 0, 85, 0.15) 0%, transparent 70%);
+  filter: blur(80px);
+}
 
-/* تکه ۱: استایل سینمای آزاد */
-.ia{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 10px;padding:14px 16px 20px}
-#pv{position:fixed;inset:0;z-index:40;background:#000;display:none;flex-direction:column}
-#pv video{width:100%;max-height:60vh;background:#000}
-#pv .bar{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px}
-#pv h4{margin:0;font-size:15px}
-#pv .inf{padding:0 16px 16px;color:var(--mut);font-size:13px;line-height:1.9;overflow-y:auto}
+/* هدر لوکس برنامه‌نویسی‌شده */
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 30;
+  padding: calc(env(safe-area-inset-top, 0px) + 14px) 20px 12px;
+  display: flex; justify-content: space-between; align-items: center;
+  background: linear-gradient(180deg, rgba(3, 4, 7, 0.9) 0%, transparent 100%);
+  backdrop-filter: blur(8px);
+}
+.brand { display: flex; align-items: center; gap: 8px; }
+.brand-logo {
+  font-size: 24px; font-weight: 900; letter-spacing: 1.5px;
+  background: linear-gradient(135deg, #fff 30%, var(--accent-neon));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.brand-badge {
+  font-size: 9px; font-weight: 800; background: var(--ruby-red);
+  color: #fff; padding: 2px 6px; border-radius: 6px; text-transform: uppercase;
+}
+.icon-top-btn {
+  width: 42px; height: 42px; border-radius: 14px;
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; backdrop-filter: blur(12px); color: #fff; cursor: pointer;
+  transition: all 0.2s;
+}
+.icon-top-btn:active { transform: scale(0.92); }
 
-nav{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);right:16px;left:16px;height:68px;border-radius:26px;background:#0d0d12f2;border:1px solid var(--line);backdrop-filter:blur(18px);display:flex;justify-content:space-around;align-items:center;z-index:20}
-nav div{text-align:center;font-size:11px;color:var(--mut);padding:8px 14px;border-radius:18px;transition:.3s}
-nav div.on{background:color-mix(in srgb,var(--a) 20%,transparent);color:var(--a)}
-nav em{display:block;font-style:normal;font-size:21px}
+/* هیرو اسلایدر بزرگ سه بعدی بالا */
+#hero-section {
+  position: relative; width: 100%; height: 62vh;
+  min-height: 420px; max-height: 520px; margin-bottom: 10px;
+}
+#flow {
+  display: flex; width: 100%; height: 100%;
+  overflow-x: auto; scroll-snap-type: x mandatory;
+  scrollbar-width: none; margin: 0; padding: 0;
+}
+#flow::-webkit-scrollbar { display: none; }
+.fc {
+  flex: 0 0 100%; width: 100%; height: 100%;
+  scroll-snap-align: start; position: relative;
+  background-size: cover; background-position: center top;
+}
+.fc::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(0deg, var(--bg-main) 0%, rgba(3,4,7,0.4) 60%, rgba(3,4,7,0.8) 100%);
+}
+.hero-info-overlay {
+  position: absolute; bottom: 20px; right: 20px; left: 20px;
+  z-index: 10; text-align: right;
+}
+.hero-tag-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.tag-gold { background: var(--gold-neon); color: #000; font-weight: 900; padding: 3px 10px; border-radius: 8px; font-size: 12px; box-shadow: 0 0 12px rgba(255, 183, 3, 0.4); }
+.tag-glass { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); color: #fff; font-weight: 700; padding: 3px 10px; border-radius: 8px; font-size: 12px; border: 1px solid var(--glass-border); }
+.hero-main-title { font-size: 28px; font-weight: 900; margin: 0 0 6px; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.9); }
+.hero-desc-text { font-size: 13px; color: var(--text-sub); margin: 0 0 16px; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-.panel{display:none;position:fixed;inset:0;background:var(--bg);z-index:15;overflow-y:auto;padding-bottom:120px}
-.panel h3{margin:0;padding:calc(env(safe-area-inset-top,0px) + 20px) 20px 0;font-size:22px;font-weight:800;display:flex;align-items:center;gap:10px}
-.back{background:var(--glass);border:1px solid var(--line);color:#fff;border-radius:12px;width:38px;height:38px;font-size:16px}
-#q{width:calc(100% - 32px);margin:14px 16px 0;padding:14px 18px;border-radius:16px;background:var(--glass);border:1px solid var(--line);color:#fff;font-family:inherit;font-size:16px;outline:none}
-.empty{text-align:center;color:var(--mut);padding:50px 20px;line-height:2}
-.more{display:block;margin:6px auto 0;padding:12px 28px}
+/* دکمه‌های پرقدرت و شیک */
+.btn-neon-play {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  background: linear-gradient(135deg, var(--accent-neon), #4338ca);
+  color: #fff; font-weight: 800; font-size: 14px; padding: 12px 28px;
+  border-radius: 16px; border: 0; cursor: pointer;
+  box-shadow: 0 8px 25px var(--accent-glow); transition: all 0.25s;
+}
+.btn-neon-play:active { transform: scale(0.95); }
 
-/* ===== صفحه جزئیات و تم‌ها ===== */
-#sheet{display:none;position:fixed;inset:0;z-index:30;background:#000c;overflow-y:auto}
-#box{--bxbg:#17171d;--bxbg2:#0c0c10;--ttl:#fff;--sty:#d5dedb;--cm:#9db3ac;
-  margin-top:60px;min-height:100%;background:linear-gradient(var(--bxbg),var(--bxbg2));border-radius:30px 30px 0 0;padding:0 0 40px;border:1px solid var(--line);position:relative;overflow:hidden;color:#fff}
-#bk{height:210px;border-radius:30px 30px 0 0;background-size:cover;background-position:center;position:relative}
-#bk:after{content:"";position:absolute;inset:0;background:linear-gradient(#0000 30%,var(--bxbg))}
-#dp{padding:0 20px;margin-top:-50px;position:relative;z-index:2}
-#dp h2{margin:0 0 8px;font-size:24px;font-weight:800;color:var(--ttl)}
-.story{line-height:2;font-size:14.5px;color:var(--sty)}
-.cast{display:flex;gap:12px;overflow-x:auto;padding:4px 0;scrollbar-width:none}
-.cast div{flex:none;width:70px;text-align:center;font-size:11px;color:var(--cm)}
-.cast img{width:64px;height:64px;border-radius:50%;object-fit:cover;background:#ffffff14;margin-bottom:5px}
-.x{position:absolute;top:14px;left:14px;z-index:5;width:40px;height:40px;border-radius:50%;background:#000a;border:0;color:#fff;font-size:18px}
-.trailer{position:relative;padding-top:56.25%;margin:14px 0;border-radius:16px;overflow:hidden;background:#000}
-.trailer iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-#trl{position:relative}
-.tweb{position:absolute;top:0;right:0;width:120px;height:120px;pointer-events:none;z-index:3;transform:scaleX(-1)}
-.deco{position:absolute;inset:0;pointer-events:none;z-index:1}
-.deco>*{position:absolute}
-.web path{stroke:#fff;stroke-opacity:.6;fill:none;stroke-width:1.2}
+/* ردیف‌های اختصاصی و ژانرها */
+.sec-header {
+  margin: 28px 20px 14px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.sec-header b {
+  font-size: 18px; font-weight: 900; color: #fff; letter-spacing: -0.3px;
+  position: relative; padding-right: 12px;
+}
+.sec-header b::before {
+  content: ""; position: absolute; right: 0; top: 20%; bottom: 20%;
+  width: 4px; background: var(--accent-neon); border-radius: 4px;
+  box-shadow: 0 0 10px var(--accent-neon);
+}
+.sec-header a {
+  font-size: 12px; color: var(--accent-neon); font-weight: 700;
+  text-decoration: none; cursor: pointer; display: flex; align-items: center; gap: 4px;
+}
 
-/* ترسناک */
-.th-horror{--bxbg:#1c0606;--bxbg2:#060000;--ttl:#ff3b3b;--sty:#e6c9c9;--cm:#b98a8a;border-color:#5a0a0a!important}
-.th-horror h2{animation:flick 3.5s infinite}
-@keyframes flick{0%,88%,100%{opacity:1}90%{opacity:.5}93%{opacity:1}96%{opacity:.3}}
-.fog{inset:0;background:radial-gradient(320px 130px at 20% 30%,#ffffff18,transparent),radial-gradient(280px 150px at 85% 65%,#ffffff12,transparent);animation:drift 12s ease-in-out infinite alternate}
-@keyframes drift{to{transform:translateX(-50px)}}
-.blood{top:0;left:0;width:100%;height:64px}
+.cards-row {
+  display: flex; gap: 14px; overflow-x: auto;
+  padding: 4px 20px 16px; scrollbar-width: none;
+}
+.cards-row::-webkit-scrollbar { display: none; }
 
-/* پوسیده و کهن (جنگی، تاریخی، ادیسه) */
-.th-old{--bxbg:#e9d8ab;--bxbg2:#c6a86e;--ttl:#4a2a0a;--sty:#33230f;--cm:#5a4426;color:#2b1d0e;border:3px solid #7a4b1e!important;box-shadow:inset 0 0 70px #5a3a1a99}
-.th-old .pill{color:#2b1d0e;background:#0000001f;border-color:#0003}
-.th-old .pill.s{background:#7a4b1e;color:#fff}
-.th-old .ghost{color:#2b1d0e;background:#0000001f;border-color:#0003}
-.th-old .main{background:linear-gradient(100deg,#8a5a24,#b9873a);color:#fff}
-.th-old .sec i{background:linear-gradient(to left,#0004,transparent)}
-.paper{inset:0;background:radial-gradient(circle at 20% 20%,#a8814a33,transparent 40%),radial-gradient(circle at 80% 70%,#6b45222e,transparent 45%)}
+/* کارت فیلم فوق‌العاده حرفه‌ای */
+.card-item { flex: 0 0 120px; cursor: pointer; transition: all 0.25s ease; }
+.card-item:active { transform: scale(0.94); }
+.card-poster-wrapper {
+  position: relative; width: 100%; aspect-ratio: 2/3;
+  border-radius: 18px; overflow: hidden; background: #121520;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.6);
+}
+.card-poster-wrapper img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card-rating-badge {
+  position: absolute; top: 8px; left: 8px;
+  background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+  border-radius: 8px; padding: 3px 7px; font-size: 11px; font-weight: 900;
+  color: var(--gold-neon); border: 1px solid rgba(255,183,3,0.3);
+}
+.card-dub-badge {
+  position: absolute; bottom: 8px; right: 8px;
+  background: linear-gradient(135deg, var(--ruby-red), #b91c1c);
+  color: #fff; padding: 2px 7px; border-radius: 7px;
+  font-size: 10px; font-weight: 900; box-shadow: 0 2px 8px rgba(255,0,85,0.4);
+}
+.card-title {
+  margin-top: 9px; font-size: 12.5px; text-align: center; font-weight: 700;
+  line-height: 1.4; height: 35px; overflow: hidden; color: #e2e8f0;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
 
-/* علمی‌تخیلی */
-.th-scifi{--bxbg:#04122a;--bxbg2:#00040c;--ttl:#aef4ff;--sty:#c5dcef;--cm:#7fb4cf;border-color:#00e5ff55!important}
-.th-scifi h2{text-shadow:0 0 14px #00e5ff}
-.neon{inset:0;background-image:linear-gradient(#00e5ff22 1px,transparent 1px),linear-gradient(90deg,#00e5ff22 1px,transparent 1px);background-size:28px 28px;-webkit-mask-image:linear-gradient(#000,#0000 75%);mask-image:linear-gradient(#000,#0000 75%)}
+/* نوار ناوبری بسیار فوق‌العاده و مدرن پایین */
+nav {
+  position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  right: 20px; left: 20px; height: 68px;
+  border-radius: 26px; background: var(--glass-bg);
+  border: 1px solid var(--glass-border); backdrop-filter: blur(25px);
+  display: flex; justify-content: space-around; align-items: center; z-index: 30;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+}
+nav div {
+  text-align: center; font-size: 10.5px; color: var(--text-sub);
+  padding: 8px 16px; border-radius: 18px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 700; cursor: pointer;
+}
+nav div.on {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.05));
+  color: #fff; border: 1px solid rgba(99, 102, 241, 0.3);
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+nav em { display: block; font-style: normal; font-size: 20px; margin-bottom: 2px; }
 
-/* فانتزی */
-.th-fantasy{--bxbg:#241705;--bxbg2:#0b0702;--ttl:#ffd978;--sty:#eadcc0;--cm:#c9ab72;border-color:#c9a24a88!important}
-.th-fantasy h2{background:linear-gradient(#fff2b0,#d09a2c);-webkit-background-clip:text;background-clip:text;color:transparent}
-.orn{font-size:26px;color:#e6b84f;opacity:.7}
+/* پنل‌های مختلف اپلیکیشن */
+.panel { display: none; position: fixed; inset: 0; background: var(--bg-main); z-index: 40; overflow-y: auto; padding-bottom: 120px; }
+.panel h3 { margin: 0; padding: calc(env(safe-area-inset-top, 0px) + 20px) 20px 12px; font-size: 22px; font-weight: 900; display: flex; align-items: center; gap: 10px; }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px 10px; padding: 14px 20px 20px; }
+.grid .card-item { width: auto; }
+#q { width: calc(100% - 40px); margin: 10px 20px 0; padding: 15px 20px; border-radius: 16px; background: var(--card-bg); border: 1px solid var(--glass-border); color: #fff; font-family: inherit; font-size: 15px; outline: none; }
+.empty { text-align: center; color: var(--text-sub); padding: 60px 20px; line-height: 2; font-size: 14px; }
+.back-btn { background: var(--glass-bg); border: 1px solid var(--glass-border); color: #fff; border-radius: 12px; width: 38px; height: 38px; font-size: 16px; cursor: pointer; }
 
-/* مرد عنکبوتی */
-.th-spider{--bxbg:#0b1030;--bxbg2:#1d0509;--ttl:#ff4d4d;--sty:#dfe3f5;--cm:#a5aedb;border-color:#e0262655!important}
-.th-spider h2{text-shadow:2px 2px 0 #1d3bff}
-.th-spider .pill.s{background:#e02626;color:#fff}
-.th-spider .main{background:linear-gradient(100deg,#e02626,#2a4bff);color:#fff}
+/* شیت اختصاصی فیلم */
+#sheet { display: none; position: fixed; inset: 0; z-index: 50; background: rgba(0,0,0,0.85); backdrop-filter: blur(14px); overflow-y: auto; }
+#box { margin-top: 60px; min-height: 100%; background: #0b0d14; border-radius: 30px 30px 0 0; padding: 0 0 40px; border: 1px solid var(--glass-border); position: relative; color: #fff; }
+#bk { height: 250px; border-radius: 30px 30px 0 0; background-size: cover; background-position: center; position: relative; }
+#bk::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, #0b0d14 0%, transparent 100%); }
+#dp { padding: 0 20px; margin-top: -40px; position: relative; z-index: 2; }
+.close-sheet-btn { position: absolute; top: 16px; left: 16px; z-index: 10; width: 38px; height: 38px; border-radius: 50%; background: rgba(0,0,0,0.7); border: 1px solid var(--glass-border); color: #fff; font-size: 16px; cursor: pointer; }
 
-/* ادیسه */
-.th-odyssey #dp{padding:0 50px}
-.sword{width:34px;height:290px;top:240px}
-
-#msg{padding:10px 20px;color:#ff9a9a;font-size:13px}
-footer{text-align:center;color:var(--mut);font-size:12px;padding:30px 0 0}
+/* پلیر ویدیو اختصاصی */
+#pv { position: fixed; inset: 0; z-index: 60; background: #000; display: none; flex-direction: column; justify-content: center; }
+#pv video { width: 100%; max-height: 80vh; background: #000; }
+#pv .bar { position: absolute; top: 16px; left: 16px; right: 16px; display: flex; justify-content: space-between; align-items: center; z-index: 70; }
 </style>
 </head>
-<body data-t="1">
-<div id="bg"></div><div id="aur"></div>
+<body>
 
-<!-- تکه ۲: صفحه ی پخش -->
-<div id="pv">
-  <div class="bar"><h4 id="pvT"></h4><button class="back" onclick="closePv()">✕</button></div>
-  <video id="pvV" controls playsinline></video>
-  <div class="inf" id="pvI"></div>
+<!-- افکت هاله‌های سرگردان نور در پس‌زمینه -->
+<div class="aura-container">
+  <div class="aura-1"></div>
+  <div class="aura-2"></div>
 </div>
 
+<!-- هدر لوکس بالای اپلیکیشن -->
 <header>
-  <div>
-    <div class="logo">Razian</div>
-    <div class="tag">تجربه‌ای ناب از <b>لذتِ دیدن</b> ✨</div>
+  <div class="brand">
+    <span class="brand-logo">RAZIAN</span>
+    <span class="brand-badge">PRO</span>
   </div>
-  <div class="ibtn" onclick="cycleTheme()">🎨</div>
+  <div class="icon-top-btn" onclick="go(1)">🔍</div>
 </header>
-<div id="msg"></div>
 
-<div id="flow"></div>
-<div id="info"></div>
+<!-- بخش بزرگ هیرو سینمایی بالا -->
+<div id="hero-section">
+  <div id="flow"></div>
+</div>
 
-<div class="sec"><b>امشب حالت چیه؟</b><i></i></div>
-<div id="chips"></div>
-<div id="moodRow"></div>
-
+<!-- ردیف‌های ژانرهای فیلم‌ها -->
 <div id="rows"></div>
-<footer>ساخته‌شده با ♥ برای عاشقان سینما</footer>
 
-<div class="panel" id="pSearch">
-  <h3>🔍 جستجو</h3>
-  <input id="q" placeholder="اسم فیلم یا سریال..." oninput="doSearch(this.value)">
-  <div id="sRes" class="grid"></div>
-</div>
-<div class="panel" id="pFav">
-  <h3>❤️ پسندیده‌ها</h3>
-  <div id="fRes" class="grid"></div>
-</div>
-<div class="panel" id="pAll">
-  <h3><button class="back" onclick="closeAll()">›</button><span id="allTitle"></span></h3>
-  <div id="allRes" class="grid"></div>
-  <button class="main more" id="moreBtn" onclick="loadMore()">نمایش بیشتر</button>
-</div>
-
+<!-- نوار ناوبری شیشه‌ای و بسیار شیک پایین صفحه -->
 <nav>
   <div id="n0" class="on" onclick="go(0)"><em>🏠</em>خانه</div>
   <div id="n1" onclick="go(1)"><em>🔍</em>جستجو</div>
-  <div id="n2" onclick="go(2)"><em>❤️</em>پسندیده‌ها</div>
-  <div onclick="cycleTheme()"><em>🎨</em>تم</div>
+  <div id="n2" onclick="go(2)"><em>❤️</em>علاقه‌مندی</div>
 </nav>
 
+<!-- پنل جستجو و علاقه‌مندی -->
+<div class="panel" id="pSearch">
+  <h3>🔍 جستجوی پیشرفته</h3>
+  <input id="q" placeholder="نام فیلم یا سریال مورد نظر..." oninput="doSearch(this.value)">
+  <div id="sRes" class="grid"></div>
+</div>
+
+<div class="panel" id="pFav">
+  <h3>❤️ فیلم‌های مورد علاقه</h3>
+  <div id="fRes" class="grid"></div>
+</div>
+
+<div class="panel" id="pAll">
+  <h3><button class="back-btn" onclick="closeAll()">›</button><span id="allTitle"></span></h3>
+  <div id="allRes" class="grid"></div>
+</div>
+
+<!-- شیت اطلاعات کامل فیلم -->
 <div id="sheet"><div id="box"></div></div>
+
+<!-- ویدیو پلیر مدرن برنامه‌نویسی‌شده -->
+<div id="pv">
+  <div class="bar">
+    <h4 id="pvT" style="margin:0;font-size:14px;color:#fff;"></h4>
+    <button class="back-btn" onclick="closePv()">✕</button>
+  </div>
+  <video id="pvV" controls playsinline></video>
+</div>
 
 <script>
 const KEY="cd65492fbd32cf466b7fa317f1a57cbc";
@@ -194,254 +280,110 @@ const api=(p,x="",l="fa-IR")=>fetch(`${BASE}${p}?api_key=${KEY}&language=${l}${x
 const $=id=>document.getElementById(id);
 const yr=m=>(m.release_date||m.first_air_date||"").slice(0,4);
 
-/* تم برنامه */
-let theme="1";
-try{theme=localStorage.getItem("rz_t")||"1"}catch(e){}
-document.body.dataset.t=theme;
-function cycleTheme(){theme=String(theme%3+1);document.body.dataset.t=theme;try{localStorage.setItem("rz_t",theme)}catch(e){}}
-
-/* پسندیده‌ها */
-function favs(){try{return JSON.parse(localStorage.getItem("rz_f")||"[]")}catch(e){return []}}
-function isFav(id){return favs().some(f=>f.id===id)}
-function toggleFav(id,type,poster,title,vote){
-  let f=favs();
-  f=isFav(id)?f.filter(x=>x.id!==id):[{id,type,poster_path:poster,title,vote_average:vote},...f];
-  try{localStorage.setItem("rz_f",JSON.stringify(f))}catch(e){}
-  const b=$("heart");if(b)b.textContent=isFav(id)?"❤️":"🤍";
-}
-
-/* کارت */
+/* ساخت کارت‌های گرافیکی مهندسی‌شده */
 function card(m,type){
   const t=m.media_type&&m.media_type!=="person"?m.media_type:type;
   const name=(m.title||m.name||"").replace(/'/g,"");
-  return `<div class="card" onclick="showDetail('${t}',${m.id})">
-    <div class="pw"><img loading="lazy" src="${IM}w342${m.poster_path}" alt="">
-    <span class="rt">★ ${(m.vote_average||0).toFixed(1)}</span></div>
-    <div class="t">${name}</div></div>`;
+  return `<div class="card-item" onclick="showDetail('${t}',${m.id})">
+    <div class="card-poster-wrapper">
+      <img loading="lazy" src="${IM}w342${m.poster_path}" alt="">
+      <span class="card-rating-badge">★ ${(m.vote_average||0).toFixed(1)}</span>
+      <span class="card-dub-badge">دوبله</span>
+    </div>
+    <div class="card-title">${name}</div>
+  </div>`;
 }
 
-/* هیرو */
-let hs=[],cur=-1;
+/* اسلایدر سینمایی بالا */
 async function loadHero(){
   const d=await api("/trending/movie/week");
-  hs=d.results.filter(m=>m.poster_path&&m.backdrop_path).slice(0,10);
-  $("flow").innerHTML=hs.map(m=>`<div class="fc" style="background-image:url(${IM}w500${m.poster_path})" onclick="showDetail('movie',${m.id})"></div>`).join("");
-  $("flow").addEventListener("scroll",tilt,{passive:true});
-  tilt();
-}
-function tilt(){
-  const f=$("flow"),c=f.getBoundingClientRect(),mid=c.left+c.width/2;
-  let best=0,bd=1e9;
-  [...f.children].forEach((el,i)=>{
-    const r=el.getBoundingClientRect(),d=Math.abs(r.left+r.width/2-mid);
-    el.style.transform=`scale(${Math.max(.8,1-d/c.width*.4)})`;
-    el.style.opacity=Math.max(.4,1-d/c.width*1.1);
-    if(d<bd){bd=d;best=i}
-  });
-  if(best!==cur){cur=best;const m=hs[best];
-    $("bg").style.backgroundImage=`url(${IM}w780${m.backdrop_path})`;
-    $("info").innerHTML=`<span class="pill">${yr(m)}</span><span class="pill s">★ ${m.vote_average.toFixed(1)}</span>
-      <h1>${m.title}</h1><p>${m.overview||""}</p>
-      <div class="btns"><button class="main" onclick="showDetail('movie',${m.id})">▶ جزئیات و داستان</button></div>`;
-  }
+  const hs=d.results.filter(m=>m.poster_path&&m.backdrop_path).slice(0,5);
+  $("flow").innerHTML=hs.map(m=>`
+    <div class="fc" style="background-image:url(${IM}w1280${m.backdrop_path})" onclick="showDetail('movie',${m.id})">
+      <div class="hero-info-overlay">
+        <div class="hero-tag-row">
+          <span class="tag-gold">★ ${(m.vote_average||0).toFixed(1)}</span>
+          <span class="tag-glass">${yr(m)}</span>
+        </div>
+        <h1 class="hero-main-title">${m.title}</h1>
+        <p class="hero-desc-text">${m.overview||""}</p>
+        <button class="btn-neon-play">▶ پخش آنلاین سریع</button>
+      </div>
+    </div>
+  `).join("");
 }
 
-/* حال‌وهوا */
-const moods=[["😄 شاد","35"],["🔥 هیجان","28"],["💕 عاشقانه","10749"],["👻 ترسناک","27"],["🧠 فکری","9648,878"],["🎨 انیمیشن","16"],["🌍 ماجراجویی","12"]];
-$("chips").innerHTML=moods.map((m,i)=>`<button class="chip" onclick="mood(${i},this)">${m[0]}</button>`).join("");
-async function mood(i,el){
-  document.querySelectorAll(".chip").forEach(c=>c.classList.remove("on"));el.classList.add("on");
-  const pg=1+Math.floor(Math.random()*4);
-  const d=await api("/discover/movie",`&with_genres=${moods[i][1].replace(",","|")}&sort_by=popularity.desc&vote_count.gte=300&page=${pg}`);
-  $("moodRow").innerHTML=`<div class="row" style="margin-top:12px">${d.results.filter(m=>m.poster_path).map(m=>card(m,"movie")).join("")}</div>`;
-}
-
-/* ردیف‌ها */
+/* افزودن ردیف‌های اختصاصی */
 async function addRow(title,path,type,x=""){
   try{
     const d=await api(path,x);
-    const arg=[title,path,type,x].map(s=>JSON.stringify(s).replace(/"/g,"&quot;")).join(",");
-    $("rows").insertAdjacentHTML("beforeend",`<div class="sec"><b>${title}</b><i></i><a onclick="openAll(${arg})">مشاهده همه ‹</a></div><div class="row">${d.results.filter(m=>m.poster_path).map(m=>card(m,type)).join("")}</div>`);
-  }catch(e){$("msg").textContent="خطا در دریافت اطلاعات. اگه باز نشد VPN رو روشن کن."}
+    $("rows").insertAdjacentHTML("beforeend",`
+      <div class="sec-header"><b>${title}</b><a onclick="openAll('${title}','${path}','${type}','${x}')">مشاهده همه ‹</a></div>
+      <div class="cards-row">${d.results.filter(m=>m.poster_path).map(m=>card(m,type)).join("")}</div>
+    `);
+  }catch(e){}
 }
 
 /* مشاهده همه */
-let A={path:"",type:"",x:"",page:1};
 function openAll(title,path,type,x){
-  A={path,type,x,page:1};
   $("allTitle").textContent=title;
-  $("allRes").innerHTML="";
+  $("allRes").innerHTML=`<div class="empty">در حال به‌روزرسانی لیست...</div>`;
   $("pAll").style.display="block";
-  $("pAll").scrollTop=0;
-  loadMore();
+  api(path,x+"&page=1").then(d=>{
+    $("allRes").innerHTML=d.results.filter(m=>m.poster_path).map(m=>card(m,type)).join("");
+  });
 }
-async function loadMore(){
-  const b=$("moreBtn");b.textContent="...";
+function closeAll(){ $("pAll").style.display="none"; }
+
+/* جزئیات لوکس فیلم */
+async function showDetail(type,id){
+  $("sheet").style.display="block"; document.body.style.overflow="hidden";
+  $("box").innerHTML=`<div class="empty">در حال دریافت داده‌های فیلم...</div>`;
   try{
-    const d=await api(A.path,`${A.x}&page=${A.page}`);
-    $("allRes").insertAdjacentHTML("beforeend",d.results.filter(m=>m.poster_path).map(m=>card(m,A.type)).join(""));
-    A.page++;b.textContent="نمایش بیشتر";
-  }catch(e){b.textContent="خطا، دوباره بزن"}
-}
-function closeAll(){$("pAll").style.display="none"}
-
-/* جستجو */
-let tm;
-function doSearch(v){
-  clearTimeout(tm);
-  if(v.trim().length<2){$("sRes").innerHTML=`<div class="empty" style="grid-column:1/-1">اسم یه فیلم یا سریال بنویس 🎬</div>`;return}
-  tm=setTimeout(async()=>{
-    const d=await api("/search/multi",`&query=${encodeURIComponent(v)}`);
-    const r=d.results.filter(m=>m.poster_path&&m.media_type!=="person");
-    $("sRes").innerHTML=r.length?r.map(m=>card(m,m.media_type)).join(""):`<div class="empty" style="grid-column:1/-1">چیزی پیدا نشد 😕</div>`;
-  },450);
+    const m=await api(`/${type}/${id}`);
+    const title=(m.title||m.name);
+    $("box").innerHTML=`
+      <button class="close-sheet-btn" onclick="closeSheet()">✕</button>
+      <div id="bk" style="background-image:url(${IM}w780${m.backdrop_path||m.poster_path})"></div>
+      <div id="dp">
+        <h2 style="font-size:24px;margin:12px 0 6px;font-weight:900;">${title}</h2>
+        <div style="display:flex;gap:10px;margin-bottom:12px;">
+          <span class="tag-gold">★ ${(m.vote_average||0).toFixed(1)}</span>
+          <span class="tag-glass">${yr(m)}</span>
+        </div>
+        <p style="color:var(--text-sub);font-size:13.5px;line-height:1.9">${m.overview||"خلاصه داستان ثبت نشده است."}</p>
+        <button class="btn-neon-play" style="width:100%;margin-top:20px;padding:14px;" onclick="playDemo('${title}')">▶ پخش با کیفیت Ultra HD</button>
+      </div>`;
+  }catch(e){$("box").innerHTML=`<div class="empty">خطایی رخ داد.</div>`;}
 }
 
-/* ناوبری */
+function playDemo(title){
+  $("pv").style.display="flex";
+  $("pvT").textContent=title;
+  $("pvV").src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+  $("pvV").play();
+}
+
+function closePv(){ $("pvV").pause(); $("pv").style.display="none"; }
+function closeSheet(){ $("sheet").style.display="none"; document.body.style.overflow=""; }
+
+/* سیستم ناوبری کامل */
 function go(n){
   closeAll();
   $("pSearch").style.display=n===1?"block":"none";
   $("pFav").style.display=n===2?"block":"none";
-  [0,1,2].forEach(i=>$("n"+i).classList.toggle("on",i===n));
-  if(n===0)scrollTo({top:0,behavior:"smooth"});
-  if(n===1){doSearch("");setTimeout(()=>$("q").focus(),100)}
-  if(n===2){const f=favs();$("fRes").innerHTML=f.length?f.map(m=>card(m,m.type)).join(""):`<div class="empty" style="grid-column:1/-1">هنوز چیزی نپسندیدی 🤍<br>توی صفحه‌ی هر فیلم قلب رو بزن</div>`}
+  [0,1,2].forEach(i=>$("n"+i)?.classList.toggle("on",i===n));
+  if(n===0)window.scrollTo({top:0,behavior:"smooth"});
+  if(n===1){setTimeout(()=>$("q").focus(),100);}
 }
 
-/* ===== طراحی‌های سینمایی ===== */
-function webSvg(){
-  const n=6,R=190;let s="";
-  for(let i=0;i<=n;i++){const a=i*Math.PI/2/n;s+=`M0 0L${(R*Math.cos(a)).toFixed(1)} ${(R*Math.sin(a)).toFixed(1)}`}
-  for(let r=35;r<=R;r+=38){
-    for(let i=0;i<n;i++){
-      const a1=i*Math.PI/2/n,a2=(i+1)*Math.PI/2/n,am=(a1+a2)/2,h=(a2-a1)/2,cr=r*(1.8-Math.cos(h));
-      s+=`M${(r*Math.cos(a1)).toFixed(1)} ${(r*Math.sin(a1)).toFixed(1)}Q${(cr*Math.cos(am)).toFixed(1)} ${(cr*Math.sin(am)).toFixed(1)} ${(r*Math.cos(a2)).toFixed(1)} ${(r*Math.sin(a2)).toFixed(1)}`;
-    }
-  }
-  return `<svg class="web" viewBox="0 0 190 190" width="100%" height="100%"><path d="${s}"/></svg>`;
-}
-const swordSvg=`<svg viewBox="0 0 40 300" width="100%" height="100%">
-  <polygon points="20,0 28,22 28,192 12,192 12,22" fill="#c9ced6" stroke="#6b7078" stroke-width="1.5"/>
-  <line x1="20" y1="14" x2="20" y2="190" stroke="#8d939c" stroke-width="2"/>
-  <rect x="2" y="190" width="36" height="9" rx="4" fill="#b8892f" stroke="#6b4a10"/>
-  <rect x="16" y="199" width="8" height="52" fill="#5a3416"/>
-  <circle cx="20" cy="260" r="9" fill="#b8892f" stroke="#6b4a10"/></svg>`;
+/* اجرای اولیه */
+loadHero();
+addRow("🔥 فیلم‌های جدید برتر","/discover/movie","movie","&sort_by=popularity.desc");
+addRow("📺 سریال‌های پیشنهادی روز","/tv/popular","tv");
+addRow("💥 فیلم‌های اکشن هیجانی","/discover/movie","movie","&with_genres=28");
+addRow("🎨 انیمیشن‌های دنیای فانتزی","/discover/movie","movie","&with_genres=16");
 
-function pickTheme(m,title){
-  const names=((m.original_title||m.original_name||"")+" "+title);
-  const g=(m.genres||[]).map(x=>x.id);
-  const has=(...ids)=>ids.some(i=>g.includes(i));
-  if(/spider.?man|عنکبوتی/i.test(names)){
-    return {cls:"th-spider",deco:
-      `<div style="top:0;left:0;width:230px;height:230px">${webSvg()}</div>
-       <div style="top:0;right:0;width:150px;height:150px;transform:scaleX(-1)">${webSvg()}</div>
-       <div style="bottom:0;left:0;width:200px;height:200px;transform:scaleY(-1)">${webSvg()}</div>`};
-  }
-  if(/odyssey|ادیسه/i.test(names)){
-    return {cls:"th-old th-odyssey",deco:
-      `<div class="paper"></div>
-       <div class="sword" style="left:8px">${swordSvg}</div>
-       <div class="sword" style="right:8px">${swordSvg}</div>`};
-  }
-  if(has(27)){
-    return {cls:"th-horror",deco:
-      `<div class="fog"></div>
-       <svg class="blood" viewBox="0 0 360 80" preserveAspectRatio="none"><g stroke="#8a0b0b" stroke-linecap="round"><path d="M0 0H360" stroke-width="16"/><path d="M30 4V40" stroke-width="7"/><path d="M95 4V24" stroke-width="6"/><path d="M170 4V58" stroke-width="8"/><path d="M240 4V32" stroke-width="6"/><path d="M310 4V48" stroke-width="7"/></g></svg>`};
-  }
-  if(has(10752,36,10768)){
-    return {cls:"th-old",deco:`<div class="paper"></div>`};
-  }
-  if(has(878,10765)){
-    return {cls:"th-scifi",deco:`<div class="neon"></div>`};
-  }
-  if(has(14)){
-    return {cls:"th-fantasy",deco:
-      `<div class="orn" style="top:150px;right:14px">✦</div><div class="orn" style="top:150px;left:14px">✦</div>
-       <div class="orn" style="bottom:14px;right:14px">❖</div><div class="orn" style="bottom:14px;left:14px">❖</div>`};
-  }
-  return {cls:"",deco:""};
-}
-
-/* جزئیات + تریلر */
-let TR="";
-async function showDetail(type,id){
-  $("sheet").style.display="block";document.body.style.overflow="hidden";
-  $("box").className="";
-  $("box").innerHTML=`<div class="empty">در حال بارگذاری...</div>`;
-  try{
-    const m=await api(`/${type}/${id}`,"&append_to_response=credits");
-    let story=m.overview;
-    if(!story){const e=await api(`/${type}/${id}`,"","en-US");story=e.overview||"خلاصه داستان موجود نیست."}
-    const vd=await fetch(`${BASE}/${type}/${id}/videos?api_key=${KEY}`).then(r=>r.json()).catch(()=>({results:[]}));
-    const yt=(vd.results||[]).filter(v=>v.site==="YouTube");
-    const tv=yt.find(v=>v.type==="Trailer")||yt[0];
-    TR=tv?tv.key:"";
-    const title=(m.title||m.name),safe=title.replace(/'/g,"");
-    const th=pickTheme(m,title);
-    const genres=(m.genres||[]).map(g=>`<span class="pill">${g.name}</span>`).join("");
-    const cast=((m.credits&&m.credits.cast)||[]).filter(c=>c.profile_path).slice(0,10).map(c=>`<div><img src="${IM}w185${c.profile_path}"><br>${c.name}</div>`).join("");
-    const run=m.runtime?`<span class="pill">⏱ ${m.runtime} دقیقه</span>`:(m.number_of_seasons?`<span class="pill">${m.number_of_seasons} فصل</span>`:"");
-    $("box").className=th.cls;
-    $("box").innerHTML=`
-      <div class="deco">${th.deco}</div>
-      <button class="x" onclick="closeSheet()">✕</button>
-      <div id="bk" style="background-image:url(${IM}w780${m.backdrop_path||m.poster_path})"></div>
-      <div id="dp">
-        <h2>${title}</h2>
-        <div><span class="pill">${yr(m)}</span><span class="pill s">★ ${m.vote_average.toFixed(1)}</span>${run}</div>
-        <div style="margin:10px 0">${genres}</div>
-        <div class="btns" style="justify-content:flex-start;margin:14px 0">
-          ${TR?`<button class="main" onclick="playTrailer()">▶ تماشای تریلر</button>`:""}
-          <button class="main ghost" id="heart" onclick="toggleFav(${id},'${type}','${m.poster_path}','${safe}',${m.vote_average})">${isFav(id)?"❤️":"🤍"}</button>
-        </div>
-        <div id="trl"></div>
-        <p class="story">${story}</p>
-        ${cast?`<div class="sec" style="margin:20px 0 10px"><b>بازیگران</b><i></i></div><div class="cast">${cast}</div>`:""}
-      </div>`;
-  }catch(e){$("box").innerHTML=`<div class="empty">خطا در دریافت اطلاعات</div><button class="x" onclick="closeSheet()">✕</button>`}
-}
-function playTrailer(){
-  const sp=$("box").classList.contains("th-spider");
-  $("trl").innerHTML=`<div class="trailer"><iframe src="https://www.youtube.com/embed/${TR}?autoplay=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe></div>${sp?`<div class="tweb">${webSvg()}</div>`:""}`;
-}
-function closeSheet(){$("sheet").style.display="none";$("box").innerHTML="";$("box").className="";document.body.style.overflow=""}
-
-/* تکه ۳: سینمای آزاد - Internet Archive */
-async function addFree(){
-  try{
-    const u="https://archive.org/advancedsearch.php?q="+encodeURIComponent("collection:feature_films AND mediatype:movies")+"&fl[]=identifier&fl[]=title&fl[]=year&sort[]=downloads+desc&rows=24&output=json";
-    const d=await fetch(u).then(r=>r.json());
-    const items=d.response.docs;
-    $("rows").insertAdjacentHTML("afterbegin",`<div class="sec"><b>🎞️ سینمای آزاد</b><i></i></div><div class="row">${items.map(m=>`
-      <div class="card" onclick="playFree('${m.identifier}')">
-        <div class="pw"><img loading="lazy" src="https://archive.org/services/img/${m.identifier}" alt="">
-        <span class="rt">${m.year||""}</span></div>
-        <div class="t">${(m.title||"").replace(/'/g,"")}</div></div>`).join("")}</div>`);
-  }catch(e){}
-}
-async function playFree(id){
-  $("pv").style.display="flex";$("pvT").textContent="...";$("pvI").textContent="در حال بارگذاری...";
-  try{
-    const m=await fetch("https://archive.org/metadata/"+id).then(r=>r.json());
-    const f=(m.files||[]).filter(x=>/\.mp4$/i.test(x.name)&&x.source!=="original"||/\.mp4$/i.test(x.name))[0];
-    $("pvT").textContent=(m.metadata&&m.metadata.title)||id;
-    if(!f){$("pvI").textContent="ویدیوی قابل پخش پیدا نشد.";return}
-    $("pvV").src="https://archive.org/download/"+id+"/"+encodeURIComponent(f.name);
-    $("pvV").play().catch(()=>{});
-    const ds=(m.metadata&&m.metadata.description)||"";
-    $("pvI").innerHTML=(Array.isArray(ds)?ds.join(" "):ds).replace(/<[^>]+>/g,"").slice(0,500)+
-      `<br><br><a style="color:var(--a)" href="https://archive.org/details/${id}" target="_blank">صفحه‌ی فیلم در Internet Archive (اطلاعات مجوز و گزارش)</a>`;
-  }catch(e){$("pvI").textContent="خطا در بارگذاری. اگه باز نشد VPN رو روشن کن."}
-}
-function closePv(){const v=$("pvV");v.pause();v.removeAttribute("src");v.load();$("pv").style.display="none"}
-addFree();
-
-/* شروع */
-loadHero().catch(()=>{$("msg").textContent="خطا در دریافت اطلاعات. اگه باز نشد VPN رو روشن کن."});
-addRow("🔥 داغ‌ترین فیلم‌ها","/movie/popular","movie");
-addRow("📺 سریال‌های محبوب","/tv/popular","tv");
-addRow("💥 اکشن","/discover/movie","movie","&with_genres=28&sort_by=popularity.desc");
-addRow("🏆 برترین‌ها","/movie/top_rated","movie"); 
 if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}
 </script>
 </body>
