@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Razian Market Hub - قیمت لحظه‌ای بازار</title>
+<title>Razian Quiz Hub - بازی آنلاین و معما</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#030407">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -11,10 +11,11 @@
 :root {
   --bg-main: #030407;
   --card-bg: rgba(255, 255, 255, 0.03);
-  --accent-neon: #10b981; /* سبز نئونی مالی / صعودی */
-  --accent-glow: rgba(16, 185, 129, 0.3);
+  --accent-neon: #6366f1; /* بنفش/آبی نئونی مدرن */
+  --accent-glow: rgba(99, 102, 241, 0.35);
   --gold-neon: #ffb703;
-  --ruby-red: #ef4444; /* نزولی */
+  --success-color: #10b981;
+  --error-color: #ef4444;
   --text-primary: #ffffff;
   --text-sub: #94a3b8;
   --glass-bg: rgba(15, 17, 26, 0.85);
@@ -28,8 +29,8 @@ body {
 }
 
 .aura-container { position: fixed; inset: 0; pointer-events: none; z-index: -1; overflow: hidden; }
-.aura-1 { position: absolute; top: -100px; right: -50px; width: 350px; height: 350px; background: radial-gradient(circle, rgba(255, 183, 3, 0.15) 0%, transparent 70%); filter: blur(60px); }
-.aura-2 { position: absolute; top: 40%; left: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%); filter: blur(80px); }
+.aura-1 { position: absolute; top: -100px; right: -50px; width: 350px; height: 350px; background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%); filter: blur(60px); }
+.aura-2 { position: absolute; top: 40%; left: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(255, 183, 3, 0.15) 0%, transparent 70%); filter: blur(80px); }
 
 header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 30;
@@ -39,55 +40,42 @@ header {
   backdrop-filter: blur(8px);
 }
 .brand { display: flex; align-items: center; gap: 8px; }
-.brand-logo { font-size: 22px; font-weight: 900; letter-spacing: 1.5px; background: linear-gradient(135deg, #fff 30%, var(--gold-neon)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.brand-badge { font-size: 9px; font-weight: 800; background: var(--gold-neon); color: #000; padding: 2px 6px; border-radius: 6px; }
-.live-status { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--accent-neon); background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.2); }
-.pulse-dot { width: 7px; height: 7px; background: var(--accent-neon); border-radius: 50%; box-shadow: 0 0 8px var(--accent-neon); animation: pulse 1.5s infinite; }
-@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+.brand-logo { font-size: 20px; font-weight: 900; letter-spacing: 1.5px; background: linear-gradient(135deg, #fff 30%, var(--accent-neon)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.brand-badge { font-size: 9px; font-weight: 800; background: var(--accent-neon); color: #fff; padding: 2px 6px; border-radius: 6px; }
 
-.container { padding: calc(env(safe-area-inset-top, 0px) + 70px) 20px 20px; }
+.coin-box { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 800; color: var(--gold-neon); background: rgba(255, 183, 3, 0.1); padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(255, 183, 3, 0.2); }
 
-/* کارت خلاصه وضعیت بازار */
-.market-banner { background: linear-gradient(135deg, rgba(255,183,3,0.1), rgba(16,185,129,0.05)); border: 1px solid var(--glass-border); border-radius: 22px; padding: 20px; margin-bottom: 24px; position: relative; overflow: hidden; }
-.market-banner h2 { margin: 0 0 6px; font-size: 20px; font-weight: 900; }
-.market-banner p { margin: 0; font-size: 12.5px; color: var(--text-sub); line-height: 1.6; }
+.container { padding: calc(env(safe-area-inset-top, 0px) + 80px) 20px 20px; max-width: 600px; margin: 0 auto; }
 
-.sec-header { margin: 20px 0 12px; display: flex; justify-content: space-between; align-items: center; }
-.sec-header b { font-size: 16px; font-weight: 900; color: #fff; position: relative; padding-right: 12px; }
-.sec-header b::before { content: ""; position: absolute; right: 0; top: 20%; bottom: 20%; width: 4px; background: var(--gold-neon); border-radius: 4px; box-shadow: 0 0 10px var(--gold-neon); }
+/* کارت بازی و معما */
+.game-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 24px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); position: relative; overflow: hidden; }
+.level-indicator { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-sub); font-weight: 700; margin-bottom: 16px; }
+.level-badge { background: rgba(99, 102, 241, 0.15); color: var(--accent-neon); padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(99, 102, 241, 0.3); }
 
-/* گرید قیمت‌ها */
-.price-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-.price-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 18px; padding: 16px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(14px); transition: all 0.2s; }
-.price-card:active { transform: scale(0.98); }
-.item-info { display: flex; align-items: center; gap: 14px; }
-.item-icon { width: 42px; height: 42px; border-radius: 14px; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 20px; border: 1px solid var(--glass-border); }
-.item-name { font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 3px; }
-.item-sub { font-size: 11px; color: var(--text-sub); }
+.question-text { font-size: 18px; font-weight: 900; line-height: 1.6; margin-bottom: 24px; text-align: right; color: #fff; }
 
-.item-values { text-align: left; }
-.item-price { font-size: 15px; font-weight: 900; color: #fff; direction: ltr; margin-bottom: 3px; }
-.item-change { font-size: 11px; font-weight: 700; direction: ltr; display: inline-block; padding: 2px 6px; border-radius: 6px; }
-.item-change.up { color: var(--accent-neon); background: rgba(16,185,129,0.1); }
-.item-change.down { color: var(--ruby-red); background: rgba(239,68,68,0.1); }
+/* گزینه‌ها */
+.options-grid { display: flex; flex-direction: column; gap: 12px; }
+.option-btn { width: 100%; padding: 16px 20px; border-radius: 16px; background: var(--card-bg); border: 1px solid var(--glass-border); color: #fff; font-size: 14px; font-weight: 700; text-align: right; cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center; }
+.option-btn:active { transform: scale(0.98); }
+.option-btn.correct { background: rgba(16, 185, 129, 0.2); border-color: var(--success-color); color: var(--success-color); }
+.option-btn.wrong { background: rgba(239, 68, 68, 0.2); border-color: var(--error-color); color: var(--error-color); }
 
-/* تب‌های پایین */
+/* نویگیشن پایین */
 nav {
-  position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); right: 20px; left: 20px; height: 68px;
+  position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); right: 20px; left: 20px; height: 68px; max-width: 600px; margin: 0 auto;
   border-radius: 26px; background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(25px);
   display: flex; justify-content: space-around; align-items: center; z-index: 30; box-shadow: 0 20px 40px rgba(0,0,0,0.9);
 }
 nav div { text-align: center; font-size: 10.5px; color: var(--text-sub); padding: 8px 16px; border-radius: 18px; transition: all 0.3s; font-weight: 700; cursor: pointer; }
-nav div.on { background: linear-gradient(135deg, rgba(255, 183, 3, 0.2), rgba(255, 183, 3, 0.05)); color: #fff; border: 1px solid rgba(255, 183, 3, 0.3); box-shadow: 0 0 15px rgba(255,183,3,0.2); }
+nav div.on { background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.05)); color: #fff; border: 1px solid rgba(99, 102, 241, 0.3); box-shadow: 0 0 15px var(--accent-glow); }
 nav em { display: block; font-style: normal; font-size: 20px; margin-bottom: 2px; }
 
 /* پنل‌های مختلف */
-.panel { display: none; padding-top: 10px; }
+.panel { display: none; }
 .panel.active { display: block; }
 
-/* ابزار محاسبه‌گر */
-.calc-box { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; margin-top: 10px; }
-.calc-input { width: 100%; padding: 14px; border-radius: 14px; background: var(--card-bg); border: 1px solid var(--glass-border); color: #fff; font-size: 16px; outline: none; margin-bottom: 12px; text-align: center; font-weight: 800; }
+.leaderboard-item { display: flex; justify-content: space-between; align-items: center; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 14px; padding: 14px 18px; margin-bottom: 10px; font-weight: 700; font-size: 13.5px; }
 </style>
 </head>
 <body>
@@ -99,144 +87,152 @@ nav em { display: block; font-style: normal; font-size: 20px; margin-bottom: 2px
 
 <header>
   <div class="brand">
-    <span class="brand-logo">RAZIAN</span>
-    <span class="brand-badge">PRO</span>
+    <span class="brand-logo">RAZIAN QUIZ</span>
+    <span class="brand-badge">GAME</span>
   </div>
-  <div class="live-status">
-    <span class="pulse-dot"></span>
-    <span>بروزرسانی زنده</span>
+  <div class="coin-box">
+    <span>🪙</span>
+    <span id="coinCount">120</span>
   </div>
 </header>
 
 <div class="container">
   
-  <!-- صفحه اصلی (قیمت‌ها) -->
-  <div class="panel active" id="pHome">
-    <div class="market-banner">
-      <h2>📈 بازار لحظه‌ای ایران</h2>
-      <p>نرخ رسمی طلا، سکه، ارز و رمزارزها بدون نیاز به فیلترشکن با آپدیت اتوماتیک.</p>
-    </div>
-
-    <div class="sec-header"><b>🥇 طلا و سکه</b></div>
-    <div class="price-grid" id="goldGrid">
-      <div class="price-card">
-        <div class="item-info">
-          <div class="item-icon">🪙</div>
-          <div>
-            <div class="item-name">سکه امامی (طرح جدید)</div>
-            <div class="item-sub">سکه بازار آزاد</div>
-          </div>
-        </div>
-        <div class="item-values">
-          <div class="item-price" id="p-sekke">در حال بارگذاری...</div>
-          <span class="item-change up">▲ ۰.۸٪</span>
-        </div>
+  <!-- صفحه بازی اصلی -->
+  <div class="panel active" id="pGame">
+    <div class="game-card">
+      <div class="level-indicator">
+        <span class="level-badge" id="levelBadge">مرحله ۱ از ۵</span>
+        <span style="color:var(--text-sub);">معمای هوش</span>
       </div>
-
-      <div class="price-card">
-        <div class="item-info">
-          <div class="item-icon">🟡</div>
-          <div>
-            <div class="item-name">طلای ۱۸ عیار</div>
-            <div class="item-sub">هر گرم</div>
-          </div>
-        </div>
-        <div class="item-values">
-          <div class="item-price" id="p-gold18">در حال بارگذاری...</div>
-          <span class="item-change up">▲ ۱.۲٪</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="sec-header"><b>💵 ارزهای مرجع و تتر</b></div>
-    <div class="price-grid" id="currencyGrid">
-      <div class="price-card">
-        <div class="item-info">
-          <div class="item-icon">🇺🇸</div>
-          <div>
-            <div class="item-name">دلار آمریکا</div>
-            <div class="item-sub">بازار آزاد تهران</div>
-          </div>
-        </div>
-        <div class="item-values">
-          <div class="item-price" id="p-usd">در حال بارگذاری...</div>
-          <span class="item-change down">▼ ۰.۲٪</span>
-        </div>
-      </div>
-
-      <div class="price-card">
-        <div class="item-info">
-          <div class="item-icon">🪙</div>
-          <div>
-            <div class="item-name">تتر (USDT)</div>
-            <div class="item-sub">دلار دیجیتال</div>
-          </div>
-        </div>
-        <div class="item-values">
-          <div class="item-price" id="p-tether">در حال بارگذاری...</div>
-          <span class="item-change up">▲ ۰.۵٪</span>
-        </div>
-      </div>
+      
+      <div class="question-text" id="questionText">در حال بارگذاری معما...</div>
+      
+      <div class="options-grid" id="optionsContainer"></div>
     </div>
   </div>
 
-  <!-- صفحه ماشین حساب / تبدیل‌گر -->
-  <div class="panel" id="pCalc">
-    <div class="sec-header"><b>🧮 تبدیل‌گر سریع سرمایه</b></div>
-    <div class="calc-box">
-      <p style="font-size:12.5px; color:var(--text-sub); margin-top:0;">مبلغ به تومان وارد کنید تا معادل دلاری یا تتر آن را ببنید:</p>
-      <input type="number" id="tomanInput" class="calc-input" placeholder="مثلاً 10,000,000" oninput="calculate(this.value)">
-      <div style="background:rgba(255,255,255,0.02); padding:14px; border-radius:12px; text-align:center; font-size:14px; font-weight:700;">
-        معادل تقریبی تتر: <span id="tetherResult" style="color:var(--gold-neon);">0.00 USDT</span>
-      </div>
+  <!-- صفحه رتبه‌بندی / جوایز -->
+  <div class="panel" id="pRank">
+    <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 16px;">🏆 برترین‌های هفته</h3>
+    <div class="leaderboard-item">
+      <span>🥇 امیرسجاد</span>
+      <span style="color:var(--gold-neon);">2450 سکه</span>
+    </div>
+    <div class="leaderboard-item">
+      <span>🥈 کوروش</span>
+      <span style="color:var(--gold-neon);">1920 سکه</span>
+    </div>
+    <div class="leaderboard-item">
+      <span>🥉 ملیکا</span>
+      <span style="color:var(--gold-neon);">1650 سکه</span>
     </div>
   </div>
 
-  <!-- صفحه درباره / تنظیمات -->
+  <!-- صفحه درباره بازی -->
   <div class="panel" id="pAbout">
-    <div class="sec-header"><b>ℹ️ درباره استودیو رازیان</b></div>
-    <div class="calc-box" style="text-align:center; line-height:1.8; font-size:13.5px; color:var(--text-sub);">
-      پلتفرم هوشمند بررسی بازار <br>طراحی شده با سرعت بالا و بهینه‌سازی شده برای موبایل بدون نیاز به ابزارهای جانبی.
+    <div class="game-card" style="text-align: center; line-height: 1.8;">
+      <h3 style="font-size: 18px; font-weight: 900; margin-top: 0;">درباره بازی رازیان</h3>
+      <p style="font-size: 13px; color: var(--text-sub);">چالش‌های روزانه اطلاعات عمومی، معماهای سخت و تست‌های هوش. امتیاز جمع کن و رتبه‌ات رو بالا ببر!</p>
     </div>
   </div>
 
 </div>
 
 <nav>
-  <div id="n0" class="on" onclick="switchTab(0, 'pHome')"><em>📊</em>بازار</div>
-  <div id="n1" onclick="switchTab(1, 'pCalc')"><em>🧮</em>محاسبه‌گر</div>
+  <div id="n0" class="on" onclick="switchTab(0, 'pGame')"><em>🎮</em>بازی</div>
+  <div id="n1" onclick="switchTab(1, 'pRank')"><em>🏆</em>رتبه‌بندی</div>
   <div id="n2" onclick="switchTab(2, 'pAbout')"><em>⭐</em>درباره</div>
 </nav>
 
 <script>
-// تابع دریافت قیمت‌های زنده از APIهای رایگان معتبر بدون فیلتر
-let currentUsdPrice = 60000; // مقدار پیش‌فرض فرضی جهت محاسبات اولیه
+// دیتابیس سوالات و معماها
+const quizData = [
+  {
+    q: "کدام سیاره در منظومه شمسی به نام سیاره سرخ شناخته می‌شود؟",
+    options: ["مشتری", "مریخ", "زهره", "عطارد"],
+    answer: 1
+  },
+  {
+    q: "کدام زبان برنامه‌نویسی به عنوان زبان اصلی وب در سمت کاربر شناخته می‌شود؟",
+    options: ["Python", "C++", "JavaScript", "Java"],
+    answer: 2
+  },
+  {
+    q: "کدام شهر پایتخت کشور ژاپن است؟",
+    options: ["سئول", "پکن", "توکیو", "اوساکا"],
+    answer: 2
+  },
+  {
+    q: "بزرگترین اقیانوس کره زمین کدام است؟",
+    options: ["اقیانوس آرام", "اقیانوس اطلس", "اقیانوس هند", "اقیانوس منجمد شمالی"],
+    answer: 0
+  },
+  {
+    q: "سرعت نور تقریباً چند کیلومتر بر ثانیه است؟",
+    options: ["۱۵۰,۰۰۰", "۳۰۰,۰۰۰", "۴۵۰,۰۰۰", "۶۰۰,۰۰۰"],
+    answer: 1
+  }
+];
 
-async function fetchLiveMarketData() {
-  try {
-    // دریافت قیمت تتر و بیت‌کوین از کوین‌گکو به عنوان شاخص دلار دیجیتال
-    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=tether,bitcoin&vs_currencies=usd,irr');
-    const data = await res.json();
-    
-    // شبیه‌سازی یا محاسبه قیمت بر اساس منابع رایگان آزاد
-    // برای نمایش واقعی‌تر و پر سرعت، از اتصال به ای‌پ‌آی‌های عمومی استفاده میکنیم
-    // در اینجا جهت تست پایداری، رنج قیمت‌های زنده بازار شبیه‌سازی و آپدیت میشوند:
-    
-    // آپدیت نمایشی المان‌ها با افکت زنده
-    document.getElementById("p-tether").textContent = "۵۹,۸۵۰ تومان";
-    document.getElementById("p-usd").textContent = "۵۹,۷۰۰ تومان";
-    document.getElementById("p-gold18").textContent = "۳,۸50,000 تومان";
-    document.getElementById("p-sekke").textContent = "۴۳,۲۰۰,000 تومان";
-    
-  } catch (e) {
-    console.log("خطا در بروزرسانی زنده قیمت‌ها");
+let currentLevel = 0;
+let score = 120;
+
+function loadQuestion() {
+  if (currentLevel >= quizData.length) {
+    document.getElementById("pGame").innerHTML = `
+      <div class="game-card" style="text-align:center; padding: 40px 20px;">
+        <h2 style="font-size:22px; font-weight:900; color:var(--gold-neon); margin-bottom:10px;">🎉 تبریک! همه مراحل را تمام کردی</h2>
+        <p style="color:var(--text-sub); font-size:13.5px; margin-bottom:20px;">تو توانستی با موفقیت تمام معماهای این بخش را حل کنی.</p>
+        <button onclick="resetGame()" style="background:var(--accent-neon); color:#fff; border:0; padding:12px 24px; border-radius:14px; font-weight:800; cursor:pointer;">بازی مجدد</button>
+      </div>
+    `;
+    return;
+  }
+
+  const qData = quizData[currentLevel];
+  document.getElementById("levelBadge").textContent = `مرحله ${currentLevel + 1} از ${quizData.length}`;
+  document.getElementById("questionText").textContent = qData.q;
+
+  const optContainer = document.getElementById("optionsContainer");
+  optContainer.innerHTML = qData.options.map((opt, index) => `
+    <button class="option-btn" onclick="checkAnswer(${index}, this)">
+      <span>${opt}</span>
+      <span style="font-size:12px; opacity:0.6;">گزینه ${index + 1}</span>
+    </button>
+  `).join("");
+}
+
+function checkAnswer(selectedIndex, btnElement) {
+  const qData = quizData[currentLevel];
+  const allBtns = document.querySelectorAll(".option-btn");
+  
+  // غیرفعال کردن کلیک مجدد
+  allBtns.forEach(b => b.style.pointerEvents = "none");
+
+  if (selectedIndex === qData.answer) {
+    btnElement.classList.add("correct");
+    score += 20;
+    document.getElementById("coinCount").textContent = score;
+    setTimeout(() => {
+      currentLevel++;
+      loadQuestion();
+    }, 1200);
+  } else {
+    btnElement.classList.add("wrong");
+    allBtns[qData.answer].classList.add("correct");
+    setTimeout(() => {
+      currentLevel++;
+      loadQuestion();
+    }, 1500);
   }
 }
 
-function calculate(val) {
-  if(!val) { document.getElementById("tetherResult").textContent = "0.00 USDT"; return; }
-  let tetherVal = val / 59850;
-  document.getElementById("tetherResult").textContent = tetherVal.toFixed(2) + " USDT";
+function resetGame() {
+  currentLevel = 0;
+  score = 120;
+  document.getElementById("coinCount").textContent = score;
+  location.reload();
 }
 
 function switchTab(index, panelId) {
@@ -247,9 +243,7 @@ function switchTab(index, panelId) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// بارگذاری اولیه و تنظیم بروزرسانی خودکار هر ۳۰ ثانیه
-fetchLiveMarketData();
-setInterval(fetchLiveMarketData, 30000);
+loadQuestion();
 
 if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}
 </script>
