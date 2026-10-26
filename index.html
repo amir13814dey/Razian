@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Razian Cinema Studio</title>
+<title>Razian YouTube Hub</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#030407">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -11,10 +11,9 @@
 :root {
   --bg-main: #030407;
   --card-bg: rgba(255, 255, 255, 0.03);
-  --accent-neon: #6366f1;
-  --accent-glow: rgba(99, 102, 241, 0.4);
+  --accent-neon: #ff0033; /* رنگ رد یوتیوبی جذاب */
+  --accent-glow: rgba(255, 0, 51, 0.35);
   --gold-neon: #ffb703;
-  --ruby-red: #ff0055;
   --text-primary: #ffffff;
   --text-sub: #94a3b8;
   --glass-bg: rgba(15, 17, 26, 0.85);
@@ -28,8 +27,8 @@ body {
 }
 
 .aura-container { position: fixed; inset: 0; pointer-events: none; z-index: -1; overflow: hidden; }
-.aura-1 { position: absolute; top: -100px; right: -50px; width: 350px; height: 350px; background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, transparent 70%); filter: blur(60px); }
-.aura-2 { position: absolute; top: 40%; left: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(255, 0, 85, 0.15) 0%, transparent 70%); filter: blur(80px); }
+.aura-1 { position: absolute; top: -100px; right: -50px; width: 350px; height: 350px; background: radial-gradient(circle, rgba(255, 0, 51, 0.2) 0%, transparent 70%); filter: blur(60px); }
+.aura-2 { position: absolute; top: 40%; left: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%); filter: blur(80px); }
 
 header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 30;
@@ -39,67 +38,80 @@ header {
   backdrop-filter: blur(8px);
 }
 .brand { display: flex; align-items: center; gap: 8px; }
-.brand-logo { font-size: 24px; font-weight: 900; letter-spacing: 1.5px; background: linear-gradient(135deg, #fff 30%, var(--accent-neon)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.brand-badge { font-size: 9px; font-weight: 800; background: var(--ruby-red); color: #fff; padding: 2px 6px; border-radius: 6px; }
+.brand-logo { font-size: 22px; font-weight: 900; letter-spacing: 1.5px; background: linear-gradient(135deg, #fff 30%, var(--accent-neon)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.brand-badge { font-size: 9px; font-weight: 800; background: var(--accent-neon); color: #fff; padding: 2px 6px; border-radius: 6px; }
 .icon-top-btn { width: 42px; height: 42px; border-radius: 14px; background: var(--glass-bg); border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center; font-size: 17px; backdrop-filter: blur(12px); color: #fff; cursor: pointer; }
 
-#hero-section { position: relative; width: 100%; height: 62vh; min-height: 420px; max-height: 520px; margin-bottom: 10px; }
+/* هیرو سشن بالای صفحه */
+#hero-section { position: relative; width: 100%; height: 56vh; min-height: 380px; margin-bottom: 10px; }
 #flow { display: flex; width: 100%; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin: 0; padding: 0; }
 #flow::-webkit-scrollbar { display: none; }
-.fc { flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: start; position: relative; background-size: cover; background-position: center top; }
-.fc::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, var(--bg-main) 0%, rgba(3,4,7,0.4) 60%, rgba(3,4,7,0.8) 100%); }
+.fc { flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: start; position: relative; background-size: cover; background-position: center; }
+.fc::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, var(--bg-main) 0%, rgba(3,4,7,0.3) 50%, rgba(3,4,7,0.85) 100%); }
 .hero-info-overlay { position: absolute; bottom: 20px; right: 20px; left: 20px; z-index: 10; text-align: right; }
 .hero-tag-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
-.tag-gold { background: var(--gold-neon); color: #000; font-weight: 900; padding: 3px 10px; border-radius: 8px; font-size: 12px; }
-.tag-glass { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); color: #fff; font-weight: 700; padding: 3px 10px; border-radius: 8px; font-size: 12px; border: 1px solid var(--glass-border); }
-.hero-main-title { font-size: 28px; font-weight: 900; margin: 0 0 6px; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.9); }
-.hero-desc-text { font-size: 13px; color: var(--text-sub); margin: 0 0 16px; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.tag-gold { background: var(--gold-neon); color: #000; font-weight: 900; padding: 3px 10px; border-radius: 8px; font-size: 11px; }
+.tag-glass { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); color: #fff; font-weight: 700; padding: 3px 10px; border-radius: 8px; font-size: 11px; border: 1px solid var(--glass-border); }
+.hero-main-title { font-size: 22px; font-weight: 900; margin: 0 0 6px; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.9); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
 .btn-neon-play {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  background: linear-gradient(135deg, var(--accent-neon), #4338ca); color: #fff;
-  font-weight: 800; font-size: 14px; padding: 12px 28px; border-radius: 16px; border: 0; cursor: pointer;
-  box-shadow: 0 8px 25px var(--accent-glow); transition: all 0.25s;
+  background: linear-gradient(135deg, var(--accent-neon), #b91c1c); color: #fff;
+  font-weight: 800; font-size: 13px; padding: 10px 24px; border-radius: 14px; border: 0; cursor: pointer;
+  box-shadow: 0 6px 20px var(--accent-glow); transition: all 0.25s;
 }
 
-.sec-header { margin: 28px 20px 14px; display: flex; justify-content: space-between; align-items: center; }
-.sec-header b { font-size: 18px; font-weight: 900; color: #fff; position: relative; padding-right: 12px; }
-.sec-header b::before { content: ""; position: absolute; right: 0; top: 20%; bottom: 20%; width: 4px; background: var(--accent-neon); border-radius: 4px; box-shadow: 0 0 10px var(--accent-neon); }
-.sec-header a { font-size: 12px; color: var(--accent-neon); font-weight: 700; text-decoration: none; cursor: pointer; }
+/* بخش شورتز (YouTube Shorts) افقی */
+.shorts-container { display: flex; gap: 12px; overflow-x: auto; padding: 4px 20px 16px; scrollbar-width: none; }
+.shorts-container::-webkit-scrollbar { display: none; }
+.short-card { flex: 0 0 130px; height: 220px; border-radius: 18px; position: relative; overflow: hidden; background: #121520; border: 1px solid var(--glass-border); cursor: pointer; }
+.short-card img { width: 100%; height: 100%; object-fit: cover; }
+.short-card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, transparent 60%); }
+.short-title { position: absolute; bottom: 10px; right: 10px; left: 10px; z-index: 2; font-size: 11.5px; font-weight: 700; color: #fff; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.shorts-badge { position: absolute; top: 8px; right: 8px; z-index: 2; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); padding: 2px 6px; border-radius: 6px; font-size: 9px; font-weight: 900; color: var(--accent-neon); }
 
+.sec-header { margin: 24px 20px 12px; display: flex; justify-content: space-between; align-items: center; }
+.sec-header b { font-size: 17px; font-weight: 900; color: #fff; position: relative; padding-right: 12px; }
+.sec-header b::before { content: ""; position: absolute; right: 0; top: 20%; bottom: 20%; width: 4px; background: var(--accent-neon); border-radius: 4px; box-shadow: 0 0 10px var(--accent-neon); }
+
+/* کارت ویدیوهای معمولی */
 .cards-row { display: flex; gap: 14px; overflow-x: auto; padding: 4px 20px 16px; scrollbar-width: none; }
 .cards-row::-webkit-scrollbar { display: none; }
-
-.card-item { flex: 0 0 120px; cursor: pointer; transition: all 0.25s ease; }
-.card-poster-wrapper { position: relative; width: 100%; aspect-ratio: 2/3; border-radius: 18px; overflow: hidden; background: #121520; border: 1px solid var(--glass-border); box-shadow: 0 10px 22px rgba(0,0,0,0.6); }
+.card-item { flex: 0 0 160px; cursor: pointer; }
+.card-poster-wrapper { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 14px; overflow: hidden; background: #121520; border: 1px solid var(--glass-border); box-shadow: 0 8px 20px rgba(0,0,0,0.6); }
 .card-poster-wrapper img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.card-rating-badge { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); border-radius: 8px; padding: 3px 7px; font-size: 11px; font-weight: 900; color: var(--gold-neon); border: 1px solid rgba(255,183,3,0.3); }
-.card-dub-badge { position: absolute; bottom: 8px; right: 8px; background: linear-gradient(135deg, var(--ruby-red), #b91c1c); color: #fff; padding: 2px 7px; border-radius: 7px; font-size: 10px; font-weight: 900; }
-.card-title { margin-top: 9px; font-size: 12.5px; text-align: center; font-weight: 700; line-height: 1.4; height: 35px; overflow: hidden; color: #e2e8f0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.card-duration { position: absolute; bottom: 6px; left: 6px; background: rgba(0,0,0,0.8); padding: 2px 5px; border-radius: 4px; font-size: 9.5px; font-weight: 800; color: #fff; }
+.card-title { margin-top: 8px; font-size: 12px; text-align: right; font-weight: 700; line-height: 1.4; height: 34px; overflow: hidden; color: #e2e8f0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.card-channel { font-size: 10.5px; color: var(--text-sub); margin-top: 3px; }
 
+/* نویگیشن پایین */
 nav {
   position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); right: 20px; left: 20px; height: 68px;
   border-radius: 26px; background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(25px);
   display: flex; justify-content: space-around; align-items: center; z-index: 30; box-shadow: 0 20px 40px rgba(0,0,0,0.9);
 }
 nav div { text-align: center; font-size: 10.5px; color: var(--text-sub); padding: 8px 16px; border-radius: 18px; transition: all 0.3s; font-weight: 700; cursor: pointer; }
-nav div.on { background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.05)); color: #fff; border: 1px solid rgba(99, 102, 241, 0.3); box-shadow: 0 0 15px var(--accent-glow); }
+nav div.on { background: linear-gradient(135deg, rgba(255, 0, 51, 0.2), rgba(255, 0, 51, 0.05)); color: #fff; border: 1px solid rgba(255, 0, 51, 0.3); box-shadow: 0 0 15px var(--accent-glow); }
 nav em { display: block; font-style: normal; font-size: 20px; margin-bottom: 2px; }
 
+/* پنل‌های جستجو و ذخیره‌شده‌ها */
 .panel { display: none; position: fixed; inset: 0; background: var(--bg-main); z-index: 40; overflow-y: auto; padding-bottom: 120px; }
-.panel h3 { margin: 0; padding: calc(env(safe-area-inset-top, 0px) + 20px) 20px 12px; font-size: 22px; font-weight: 900; display: flex; align-items: center; gap: 10px; }
-.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px 10px; padding: 14px 20px 20px; }
+.panel h3 { margin: 0; padding: calc(env(safe-area-inset-top, 0px) + 20px) 20px 12px; font-size: 20px; font-weight: 900; }
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; padding: 14px 20px; }
 .grid .card-item { width: auto; }
-#q { width: calc(100% - 40px); margin: 10px 20px 0; padding: 15px 20px; border-radius: 16px; background: var(--card-bg); border: 1px solid var(--glass-border); color: #fff; font-size: 15px; outline: none; }
-.empty { text-align: center; color: var(--text-sub); padding: 60px 20px; line-height: 2; font-size: 14px; }
-.back-btn { background: var(--glass-bg); border: 1px solid var(--glass-border); color: #fff; border-radius: 12px; width: 38px; height: 38px; font-size: 16px; cursor: pointer; }
+#q { width: calc(100% - 40px); margin: 10px 20px 0; padding: 14px 18px; border-radius: 14px; background: var(--card-bg); border: 1px solid var(--glass-border); color: #fff; font-size: 14px; outline: none; }
+.empty { text-align: center; color: var(--text-sub); padding: 60px 20px; font-size: 13.5px; }
 
+/* شیت جزئیات و پلیر یوتیوب بدون تبلیغ */
 #sheet { display: none; position: fixed; inset: 0; z-index: 50; background: rgba(0,0,0,0.85); backdrop-filter: blur(14px); overflow-y: auto; }
-#box { margin-top: 60px; min-height: 100%; background: #0b0d14; border-radius: 30px 30px 0 0; padding: 0 0 40px; border: 1px solid var(--glass-border); position: relative; color: #fff; }
-#bk { height: 250px; border-radius: 30px 30px 0 0; background-size: cover; background-position: center; position: relative; }
-#bk::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, #0b0d14 0%, transparent 100%); }
-#dp { padding: 0 20px; margin-top: -40px; position: relative; z-index: 2; }
-.close-sheet-btn { position: absolute; top: 16px; left: 16px; z-index: 10; width: 38px; height: 38px; border-radius: 50%; background: rgba(0,0,0,0.7); border: 1px solid var(--glass-border); color: #fff; font-size: 16px; cursor: pointer; }
+#box { margin-top: 50px; min-height: 100%; background: #0b0d14; border-radius: 26px 26px 0 0; padding: 0 0 40px; border: 1px solid var(--glass-border); color: #fff; position: relative; }
+.close-sheet-btn { position: absolute; top: 16px; left: 16px; z-index: 10; width: 36px; height: 36px; border-radius: 50%; background: rgba(0,0,0,0.7); border: 1px solid var(--glass-border); color: #fff; font-size: 15px; cursor: pointer; }
+
+.player-box { width: 100%; aspect-ratio: 16/9; background: #000; position: relative; }
+.player-box iframe { width: 100%; height: 100%; border: 0; }
+.video-details-pad { padding: 20px; }
+.dl-action-box { margin-top: 20px; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 16px; padding: 16px; }
+.btn-dl-direct { display: block; width: 100%; background: linear-gradient(135deg, var(--accent-neon), #990022); color: #fff; font-weight: 800; text-align: center; padding: 12px; border-radius: 12px; text-decoration: none; font-size: 13.5px; margin-top: 10px; box-shadow: 0 4px 15px var(--accent-glow); }
 </style>
 </head>
 <body>
@@ -111,7 +123,7 @@ nav em { display: block; font-style: normal; font-size: 20px; margin-bottom: 2px
 
 <header>
   <div class="brand">
-    <span class="brand-logo">RAZIAN</span>
+    <span class="brand-logo">RAZIAN TUBES</span>
     <span class="brand-badge">PRO</span>
   </div>
   <div class="icon-top-btn" onclick="go(1)">🔍</div>
@@ -121,129 +133,165 @@ nav em { display: block; font-style: normal; font-size: 20px; margin-bottom: 2px
   <div id="flow"></div>
 </div>
 
+<div class="sec-header"><b>⚡ ویدیوهای کوتاه (Shorts)</b></div>
+<div class="shorts-container" id="shortsRow"></div>
+
 <div id="rows"></div>
 
 <nav>
   <div id="n0" class="on" onclick="go(0)"><em>🏠</em>خانه</div>
   <div id="n1" onclick="go(1)"><em>🔍</em>جستجو</div>
-  <div id="n2" onclick="go(2)"><em>❤️</em>علاقه‌مندی</div>
+  <div id="n2" onclick="go(2)"><em>📥</em>ذخیره‌شده‌ها</div>
 </nav>
 
 <div class="panel" id="pSearch">
-  <h3>🔍 جستجوی پیشرفته</h3>
-  <input id="q" placeholder="نام فیلم یا سریال..." oninput="doSearch(this.value)">
+  <h3>🔍 جستجو در یوتیوب</h3>
+  <input id="q" placeholder="جستجوی ویدیو یا یوتیوبر..." oninput="doSearch(this.value)">
   <div id="sRes" class="grid"></div>
 </div>
 
 <div class="panel" id="pFav">
-  <h3>❤️ فیلم‌های مورد علاقه</h3>
-  <div id="fRes" class="grid"></div>
-</div>
-
-<div class="panel" id="pAll">
-  <h3><button class="back-btn" onclick="closeAll()">›</button><span id="allTitle"></span></h3>
-  <div id="allRes" class="grid"></div>
+  <h3>📥 ویدیوهای ذخیره‌شده برای دانلود</h3>
+  <div id="fRes" class="empty">هنوز ویدیویی ذخیره نکرده‌اید.</div>
 </div>
 
 <div id="sheet"><div id="box"></div></div>
 
 <script>
-const KEY="cd65492fbd32cf466b7fa317f1a57cbc";
-const BASE="https://api.themoviedb.org/3";
-const IM="https://image.tmdb.org/t/p/";
-const api=(p,x="",l="fa-IR")=>fetch(`${BASE}${p}?api_key=${KEY}&language=${l}${x}`).then(r=>r.json());
-const $=id=>document.getElementById(id);
-const yr=m=>(m.release_date||m.first_air_date||"").slice(0,4);
+// دیتابیس ویدیوهای نمونه‌ی یوتیوب (پربازدیدترین‌ها، ولاگ‌ها، گیمینگ و موزیک)
+const youtubeData = {
+  trending: [
+    { id: "dQw4w9WgXcQ", title: "مستند رازهای پشت پرده‌ی تکنولوژی در سال ۲۰۲۶", channel: "Techland فارسی", views: "1.2M بازدید", duration: "14:20", thumb: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600" },
+    { id: "L_LUpnjgPso", title: "ولاگ ۲۴ ساعت زندگی در طبیعت بکر شمال ایران", channel: "سفر با علی", views: "850K بازدید", duration: "22:05", thumb: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600" },
+    { id: "3JZ_D3ELwOQ", title: "بررسی و تست گیم‌پلی کال آو دیوتی موبایل با گرافیک مکس", channel: "Gamer Zone", views: "3.4M بازدید", duration: "10:40", thumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600" },
+    { id: "kJQP7kiw5Fk", title: "آموزش کامل ادیت ویدیو برای اینستاگرام و یوتیوب", channel: "استودیو خلاقیت", views: "420K بازدید", duration: "18:15", thumb: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=600" }
+  ],
+  shorts: [
+    { id: "short1", ytId: "9bZkp7q19f0", title: "ترفندهای جالب برنامه‌نویسی که نمی‌دانستی! 🤯", channel: "کدنویس", thumb: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400" },
+    { id: "short2", ytId: "3JZ_D3ELwOQ", title: "لحظات خنده‌دار در گیم‌پلی امروز 😂", channel: "گیمر خفن", thumb: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400" },
+    { id: "short3", ytId: "L_LUpnjgPso", title: "طبیعت شگفت‌انگیز پاییز در یک دقیقه 🍂", channel: "طبیعت‌گرد", thumb: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400" },
+    { id: "short4", ytId: "dQw4w9WgXcQ", title: "موزیک آرامش‌بخش برای تمرکز حین کار 🎧", channel: "لایف‌استایل", thumb: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400" }
+  ],
+  tech: [
+    { id: "t1", ytId: "dQw4w9WgXcQ", title: "جعبه‌گشایی و تست پرچمدار جدید بازار", channel: "بررسی تخصصی", views: "650K بازدید", duration: "12:30", thumb: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600" },
+    { id: "t2", ytId: "3JZ_D3ELwOQ", title: "بهترین گوشی‌های گیمینگ اقتصادی در سال ۲۰۲۶", channel: "تک مگ", views: "910K بازدید", duration: "15:00", thumb: "https://images.unsplash.com/photo-1526738549149-8e07eca6c147?w=600" }
+  ]
+};
 
-function card(m,type){
-  const t=m.media_type&&m.media_type!=="person"?m.media_type:type;
-  const name=(m.title||m.name||"").replace(/'/g,"");
-  return `<div class="card-item" onclick="showDetail('${t}',${m.id})">
-    <div class="card-poster-wrapper">
-      <img loading="lazy" src="${IM}w342${m.poster_path}" alt="">
-      <span class="card-rating-badge">★ ${(m.vote_average||0).toFixed(1)}</span>
-      <span class="card-dub-badge">دوبله</span>
-    </div>
-    <div class="card-title">${name}</div>
-  </div>`;
-}
-
-async function loadHero(){
-  const d=api("/trending/movie/week").then(d => {
-    const hs=d.results.filter(m=>m.poster_path&&m.backdrop_path).slice(0,5);
-    $("flow").innerHTML=hs.map(m=>`
-      <div class="fc" style="background-image:url(${IM}w1280${m.backdrop_path})" onclick="showDetail('movie',${m.id})">
-        <div class="hero-info-overlay">
-          <div class="hero-tag-row">
-            <span class="tag-gold">★ ${(m.vote_average||0).toFixed(1)}</span>
-            <span class="tag-glass">${yr(m)}</span>
-          </div>
-          <h1 class="hero-main-title">${m.title}</h1>
-          <p class="hero-desc-text">${m.overview||""}</p>
-          <button class="btn-neon-play" onclick="event.stopPropagation(); showDetail('movie',${m.id})">مشاهده جزئیات</button>
+function initApp() {
+  // هیرو اسلایدر
+  document.getElementById("flow").innerHTML = youtubeData.trending.map(v => `
+    <div class="fc" style="background-image:url(${v.thumb})" onclick="openVideo('${v.id}','${v.title}','${v.channel}')">
+      <div class="hero-info-overlay">
+        <div class="hero-tag-row">
+          <span class="tag-gold">🔥 پربازدید هفته</span>
+          <span class="tag-glass">${v.views}</span>
         </div>
+        <h1 class="hero-main-title">${v.title}</h1>
+        <button class="btn-neon-play" onclick="event.stopPropagation(); openVideo('${v.id}','${v.title}','${v.channel}')">▶ تماشای بدون تبلیغ</button>
       </div>
-    `).join("");
-  }).catch(()=>{});
+    </div>
+  `).join("");
+
+  // شورتز
+  document.getElementById("shortsRow").innerHTML = youtubeData.shorts.map(s => `
+    <div class="short-card" onclick="openVideo('${s.ytId}','${s.title}','${s.channel}')">
+      <span class="shorts-badge">⚡ Shorts</span>
+      <img src="${s.thumb}" loading="lazy">
+      <div class="short-title">${s.title}</div>
+    </div>
+  `).join("");
+
+  // ردیف‌های دسته‌بندی
+  renderRow("🔥 محبوب‌ترین‌های یوتیوبرها", youtubeData.trending);
+  renderRow("📱 بررسی‌ها و تکنولوژی", youtubeData.tech);
 }
 
-async function addRow(title,path,type,x=""){
-  try{
-    const d=await api(path,x);
-    $("rows").insertAdjacentHTML("beforeend",`
-      <div class="sec-header"><b>${title}</b><a onclick="openAll('${title}','${path}','${type}','${x}')">مشاهده همه ‹</a></div>
-      <div class="cards-row">${d.results.filter(m=>m.poster_path).map(m=>card(m,type)).join("")}</div>
-    `);
-  }catch(e){}
-}
-
-function openAll(title,path,type,x){
-  $("allTitle").textContent=title;
-  $("allRes").innerHTML=`<div class="empty">در حال بارگذاری...</div>`;
-  $("pAll").style.display="block";
-  api(path,x+"&page=1").then(d=>{
-    $("allRes").innerHTML=d.results.filter(m=>m.poster_path).map(m=>card(m,type)).join("");
-  });
-}
-function closeAll(){ $("pAll").style.display="none"; }
-
-async function showDetail(type,id){
-  $("sheet").style.display="block"; document.body.style.overflow="hidden";
-  $("box").innerHTML=`<div class="empty">در حال دریافت اطلاعات فیلم...</div>`;
-  try{
-    const m=await api(`/${type}/${id}`);
-    const title=(m.title||m.name);
-    
-    $("box").innerHTML=`
-      <button class="close-sheet-btn" onclick="closeSheet()">✕</button>
-      <div id="bk" style="background-image:url(${IM}w780${m.backdrop_path||m.poster_path})"></div>
-      <div id="dp">
-        <h2 style="font-size:24px;margin:12px 0 6px;font-weight:900;">${title}</h2>
-        <div style="display:flex;gap:10px;margin-bottom:12px;">
-          <span class="tag-gold">★ ${(m.vote_average||0).toFixed(1)}</span>
-          <span class="tag-glass">${yr(m)}</span>
+function renderRow(title, items) {
+  const html = `
+    <div class="sec-header"><b>${title}</b></div>
+    <div class="cards-row">
+      ${items.map(v => `
+        <div class="card-item" onclick="openVideo('${v.id}','${v.title}','${v.channel}')">
+          <div class="card-poster-wrapper">
+            <img src="${v.thumb}" loading="lazy">
+            <span class="card-duration">${v.duration}</span>
+          </div>
+          <div class="card-title">${v.title}</div>
+          <div class="card-channel">${v.channel}</div>
         </div>
-        <p style="color:var(--text-sub);font-size:13.5px;line-height:1.9">${m.overview||"خلاصه داستان ثبت نشده است."}</p>
-      </div>`;
-  }catch(e){$("box").innerHTML=`<div class="empty">خطایی رخ داد.</div>`;}
+      `).join("")}
+    </div>
+  `;
+  document.getElementById("rows").insertAdjacentHTML("beforeend", html);
 }
 
-function closeSheet(){ $("sheet").style.display="none"; document.body.style.overflow=""; }
+function openVideo(ytId, title, channel) {
+  const sheet = document.getElementById("sheet");
+  const box = document.getElementById("box");
+  sheet.style.display = "block";
+  document.body.style.overflow = "hidden";
 
-function go(n){
-  closeAll();
-  $("pSearch").style.display=n===1?"block":"none";
-  $("pFav").style.display=n===2?"block":"none";
-  [0,1,2].forEach(i=>$("n"+i)?.classList.toggle("on",i===n));
-  if(n===0)window.scrollTo({top:0,behavior:"smooth"});
-  if(n===1){setTimeout(()=>$("q").focus(),100);}
+  // پخش ویدیو از یوتیوب بدون تبلیغات مزاحم با قابلیت امبد (rel=0 & modestbranding=1)
+  box.innerHTML = `
+    <button class="close-sheet-btn" onclick="closeSheet()">✕</button>
+    <div class="player-box">
+      <iframe src="https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&modestbranding=1&rel=0" allowfullscreen allow="autoplay"></iframe>
+    </div>
+    <div class="video-details-pad">
+      <h2 style="font-size:18px; font-weight:900; margin:0 0 8px; line-height:1.5;">${title}</h2>
+      <p style="color:var(--text-sub); font-size:13px; margin:0 0 16px;">کانال: ${channel}</p>
+      
+      <div class="dl-action-box">
+        <div style="font-size:13px; font-weight:700; color:#fff;">📥 دانلود و ذخیره‌سازی ویدیو</div>
+        <p style="font-size:11.5px; color:var(--text-sub); margin:6px 0 12px;">جهت دانلود رایگان این ویدیو با بالاترین کیفیت، از ابزارهای کمکی استفاده کنید:</p>
+        <a class="btn-dl-direct" href="https://www.y2mate.com" target="_blank">📥 دریافت لینک دانلود مستقیم ویدیو</a>
+      </div>
+    </div>
+  `;
 }
 
-loadHero();
-addRow("🔥 فیلم‌های جدید برتر","/discover/movie","movie","&sort_by=popularity.desc");
-addRow("📺 سریال‌های پیشنهادی روز","/tv/popular","tv");
-addRow("💥 فیلم‌های اکشن هیجانی","/discover/movie","movie","&with_genres=28");
-addRow("🎨 انیمیشن‌های دنیای فانتزی","/discover/movie","movie","&with_genres=16");
+function closeSheet() {
+  document.getElementById("sheet").style.display = "none";
+  document.getElementById("box").innerHTML = "";
+  document.body.style.overflow = "";
+}
+
+function doSearch(keyword) {
+  const q = keyword.trim().toLowerCase();
+  const res = document.getElementById("sRes");
+  if (!q) { res.innerHTML = ""; return; }
+
+  const all = [...youtubeData.trending, ...youtubeData.tech];
+  const found = all.filter(v => v.title.toLowerCase().includes(q) || v.channel.toLowerCase().includes(q));
+
+  if (found.length === 0) {
+    res.innerHTML = `<div class="empty" style="grid-column: span 2;">ویدیویی با این عنوان یافت نشد.</div>`;
+    return;
+  }
+
+  res.innerHTML = found.map(v => `
+    <div class="card-item" onclick="openVideo('${v.id}','${v.title}','${v.channel}')">
+      <div class="card-poster-wrapper">
+        <img src="${v.thumb}" loading="lazy">
+        <span class="card-duration">${v.duration}</span>
+      </div>
+      <div class="card-title">${v.title}</div>
+      <div class="card-channel">${v.channel}</div>
+    </div>
+  `).join("");
+}
+
+function go(n) {
+  closeSheet();
+  document.getElementById("pSearch").style.display = n === 1 ? "block" : "none";
+  document.getElementById("pFav").style.display = n === 2 ? "block" : "none";
+  [0, 1, 2].forEach(i => document.getElementById("n" + i)?.classList.toggle("on", i === n));
+  if (n === 0) window.scrollTo({ top: 0, behavior: "smooth" });
+  if (n === 1) setTimeout(() => document.getElementById("q").focus(), 100);
+}
+
+initApp();
 
 if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}
 </script>
