@@ -418,9 +418,12 @@ async function showDetail(type,id){
         <div><span class="pill">${yr(m)}</span><span class="pill s">★ ${m.vote_average.toFixed(1)}</span>${run}</div>
         <div style="margin:10px 0">${genres}</div>
         <div class="btns" style="justify-content:flex-start;margin:14px 0">
-          ${TR?`<button class="main" onclick="playTrailer()">▶ تماشای تریلر</button>`:""}
+         <button class="main" onclick="initPlayer('1080p')">▶ تماشای فیلم</button>
+${TR?`<button class="main ghost" onclick="playTrailer()">تماشای تریلر</button>`:""}
+
           <button class="main ghost" id="heart" onclick="toggleFav(${id},'${type}','${m.poster_path}','${safe}',${m.vote_average})">${isFav(id)?"❤️":"🤍"}</button>
         </div>
+        <div id="media-box"></div>
         <div id="trl"></div>
         <p class="story">${story}</p>
         ${cast?`<div class="sec" style="margin:20px 0 10px"><b>بازیگران</b><i></i></div><div class="cast">${cast}</div>`:""}
@@ -438,7 +441,24 @@ loadHero().catch(()=>{$("msg").textContent="خطا در دریافت اطلاع�
 addRow("🔥 داغ‌ترین فیلم‌ها","/movie/popular","movie");
 addRow("📺 سریال‌های محبوب","/tv/popular","tv");
 addRow("💥 اکشن","/discover/movie","movie","&with_genres=28&sort_by=popularity.desc");
-addRow("🏆 برترین‌ها","/movie/top_rated","movie"); if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}
+addRow("🏆 برترین‌ها","/movie/top_rated","movie"); if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})} 
+  const sampleMovieLinks = {
+  "1080p": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+  "720p": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+};
+
+function initPlayer(quality) {
+  const videoUrl = sampleMovieLinks[quality] || sampleMovieLinks["720p"];
+  $("media-box").innerHTML = `
+    <div class="quality-selector">
+      <button class="quality-btn ${quality==='1080p'?'active':''}" onclick="initPlayer('1080p')">1080p</button>
+      <button class="quality-btn ${quality==='720p'?'active':''}" onclick="initPlayer('720p')">720p</button>
+    </div>
+    <div id="player-container">
+      <video controls autoplay playsinline src="${videoUrl}"></video>
+    </div>`;
+}
+
 </script>
 </body>
 </html>
