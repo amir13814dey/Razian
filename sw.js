@@ -1,4 +1,4 @@
-const CACHE_NAME = 'razian-market-v1';
+const CACHE_NAME = 'razian-quiz-v1';
 const assetsToCache = [
   './index.html',
   './manifest.json'
