@@ -1,251 +1,224 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Razian Quiz Hub - بازی آنلاین و معما</title>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#030407">
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg-main: #030407;
-  --card-bg: rgba(255, 255, 255, 0.03);
-  --accent-neon: #6366f1; /* بنفش/آبی نئونی مدرن */
-  --accent-glow: rgba(99, 102, 241, 0.35);
-  --gold-neon: #ffb703;
-  --success-color: #10b981;
-  --error-color: #ef4444;
-  --text-primary: #ffffff;
-  --text-sub: #94a3b8;
-  --glass-bg: rgba(15, 17, 26, 0.85);
-  --glass-border: rgba(255, 255, 255, 0.08);
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b1220" />
+  <title>قیمت لحظه‌ای بازار</title>
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    :root {
+      --bg: #0b1220;
+      --card: #111c31;
+      --border: #1f2d45;
+      --text: #e6edf7;
+      --muted: #8ba0bd;
+      --green: #22c55e;
+      --red: #ef4444;
+      --gold: #f5c542;
+      --oil: #64748b;
+      --fx: #38bdf8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', Tahoma, sans-serif; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 16px; }
+    header { display: flex; align-items: center; justify-content: space-between; padding: 8px 4px 20px; }
+    h1 { font-size: 1.1rem; font-weight: 700; letter-spacing: -.3px; }
+    #status { font-size: .7rem; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+    #status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+    #status.live .dot { background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse 1.8s infinite; }
+    @keyframes pulse { 50% { opacity: .35; } }
 
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body {
-  margin: 0; background: var(--bg-main); color: var(--text-primary);
-  font-family: 'Vazirmatn', Tahoma, sans-serif; padding-bottom: 120px; overflow-x: hidden; user-select: none;
-}
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+    .card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 14px;
+      position: relative; overflow: hidden; transition: border-color .2s;
+    }
+    .card:hover { border-color: #2e425f; }
+    .card .tag { font-size: .62rem; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 6px; display: block; }
+    .card .name { font-size: .82rem; font-weight: 600; margin-bottom: 8px; }
+    .card .price { font-size: 1.18rem; font-weight: 800; font-variant-numeric: tabular-nums; direction: ltr; text-align: right; }
+    .card .meta { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; font-size: .68rem; }
+    .card .change { font-weight: 700; direction: ltr; }
+    .up { color: var(--green); }
+    .down { color: var(--red); }
+    .flat { color: var(--muted); }
+    .card .time { color: var(--muted); direction: ltr; font-size: .6rem; }
+    .card::after { content: ''; position: absolute; inset: auto 0 0 0; height: 3px; background: var(--accent, #334155); opacity: .5; }
+    .gold { --accent: var(--gold); }
+    .oil { --accent: var(--oil); }
+    .fx { --accent: var(--fx); }
+    .ir { --accent: #a78bfa; }
 
-.aura-container { position: fixed; inset: 0; pointer-events: none; z-index: -1; overflow: hidden; }
-.aura-1 { position: absolute; top: -100px; right: -50px; width: 350px; height: 350px; background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%); filter: blur(60px); }
-.aura-2 { position: absolute; top: 40%; left: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(255, 183, 3, 0.15) 0%, transparent 70%); filter: blur(80px); }
-
-header {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 30;
-  padding: calc(env(safe-area-inset-top, 0px) + 14px) 20px 12px;
-  display: flex; justify-content: space-between; align-items: center;
-  background: linear-gradient(180deg, rgba(3, 4, 7, 0.9) 0%, transparent 100%);
-  backdrop-filter: blur(8px);
-}
-.brand { display: flex; align-items: center; gap: 8px; }
-.brand-logo { font-size: 20px; font-weight: 900; letter-spacing: 1.5px; background: linear-gradient(135deg, #fff 30%, var(--accent-neon)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.brand-badge { font-size: 9px; font-weight: 800; background: var(--accent-neon); color: #fff; padding: 2px 6px; border-radius: 6px; }
-
-.coin-box { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 800; color: var(--gold-neon); background: rgba(255, 183, 3, 0.1); padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(255, 183, 3, 0.2); }
-
-.container { padding: calc(env(safe-area-inset-top, 0px) + 80px) 20px 20px; max-width: 600px; margin: 0 auto; }
-
-/* کارت بازی و معما */
-.game-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 24px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); position: relative; overflow: hidden; }
-.level-indicator { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-sub); font-weight: 700; margin-bottom: 16px; }
-.level-badge { background: rgba(99, 102, 241, 0.15); color: var(--accent-neon); padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(99, 102, 241, 0.3); }
-
-.question-text { font-size: 18px; font-weight: 900; line-height: 1.6; margin-bottom: 24px; text-align: right; color: #fff; }
-
-/* گزینه‌ها */
-.options-grid { display: flex; flex-direction: column; gap: 12px; }
-.option-btn { width: 100%; padding: 16px 20px; border-radius: 16px; background: var(--card-bg); border: 1px solid var(--glass-border); color: #fff; font-size: 14px; font-weight: 700; text-align: right; cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center; }
-.option-btn:active { transform: scale(0.98); }
-.option-btn.correct { background: rgba(16, 185, 129, 0.2); border-color: var(--success-color); color: var(--success-color); }
-.option-btn.wrong { background: rgba(239, 68, 68, 0.2); border-color: var(--error-color); color: var(--error-color); }
-
-/* نویگیشن پایین */
-nav {
-  position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); right: 20px; left: 20px; height: 68px; max-width: 600px; margin: 0 auto;
-  border-radius: 26px; background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(25px);
-  display: flex; justify-content: space-around; align-items: center; z-index: 30; box-shadow: 0 20px 40px rgba(0,0,0,0.9);
-}
-nav div { text-align: center; font-size: 10.5px; color: var(--text-sub); padding: 8px 16px; border-radius: 18px; transition: all 0.3s; font-weight: 700; cursor: pointer; }
-nav div.on { background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.05)); color: #fff; border: 1px solid rgba(99, 102, 241, 0.3); box-shadow: 0 0 15px var(--accent-glow); }
-nav em { display: block; font-style: normal; font-size: 20px; margin-bottom: 2px; }
-
-/* پنل‌های مختلف */
-.panel { display: none; }
-.panel.active { display: block; }
-
-.leaderboard-item { display: flex; justify-content: space-between; align-items: center; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 14px; padding: 14px 18px; margin-bottom: 10px; font-weight: 700; font-size: 13.5px; }
-</style>
+    .toolbar { display: flex; gap: 8px; margin: 16px 0; }
+    button {
+      flex: 1; padding: 11px; border-radius: 12px; border: 1px solid var(--border);
+      background: var(--card); color: var(--text); font-weight: 600; font-size: .8rem; cursor: pointer;
+    }
+    button:active { transform: scale(.985); }
+    #lastUpdate { text-align: center; font-size: .65rem; color: var(--muted); margin-top: 14px; }
+  </style>
 </head>
 <body>
+  <header>
+    <h1>📊 بازار لحظه‌ای</h1>
+    <div id="status"><span class="dot"></span><span id="statusText">در حال اتصال…</span></div>
+  </header>
 
-<div class="aura-container">
-  <div class="aura-1"></div>
-  <div class="aura-2"></div>
-</div>
+  <main class="grid" id="grid"></main>
 
-<header>
-  <div class="brand">
-    <span class="brand-logo">RAZIAN QUIZ</span>
-    <span class="brand-badge">GAME</span>
+  <div class="toolbar">
+    <button id="refreshBtn">⟳ به‌روزرسانی دستی</button>
   </div>
-  <div class="coin-box">
-    <span>🪙</span>
-    <span id="coinCount">120</span>
-  </div>
-</header>
+  <p id="lastUpdate">—</p>
 
-<div class="container">
-  
-  <!-- صفحه بازی اصلی -->
-  <div class="panel active" id="pGame">
-    <div class="game-card">
-      <div class="level-indicator">
-        <span class="level-badge" id="levelBadge">مرحله ۱ از ۵</span>
-        <span style="color:var(--text-sub);">معمای هوش</span>
-      </div>
-      
-      <div class="question-text" id="questionText">در حال بارگذاری معما...</div>
-      
-      <div class="options-grid" id="optionsContainer"></div>
-    </div>
-  </div>
+  <script>
+    // ---------- Config ----------
+    const BIQUOTE = 'https://biquote.io/api/latest';
+    const GOLD_API = 'https://api.gold-api.com/price/XAU';
+    const IRAN_API = 'https://nerkh.jahankhahan.shop/data/live.json';
 
-  <!-- صفحه رتبه‌بندی / جوایز -->
-  <div class="panel" id="pRank">
-    <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 16px;">🏆 برترین‌های هفته</h3>
-    <div class="leaderboard-item">
-      <span>🥇 امیرسجاد</span>
-      <span style="color:var(--gold-neon);">2450 سکه</span>
-    </div>
-    <div class="leaderboard-item">
-      <span>🥈 کوروش</span>
-      <span style="color:var(--gold-neon);">1920 سکه</span>
-    </div>
-    <div class="leaderboard-item">
-      <span>🥉 ملیکا</span>
-      <span style="color:var(--gold-neon);">1650 سکه</span>
-    </div>
-  </div>
+    // دارایی‌های نمایش‌داده‌شده (نمادها را می‌توانی کم/زیاد کنی)
+    const BIQUOTE_SYMBOLS = [
+      { symbol: 'XAUUSD', label: 'طلا (اونس جهانی)', unit: '$', kind: 'gold', tag: 'Gold' },
+      { symbol: 'WTIUSD',  label: 'نفت WTI',          unit: '$', kind: 'oil',  tag: 'Oil'  },
+      { symbol: 'EURUSD',  label: 'یورو / دلار',      unit: '',  kind: 'fx',   tag: 'FX'   },
+      { symbol: 'GBPUSD',  label: 'پوند / دلار',      unit: '',  kind: 'fx',   tag: 'FX'   },
+      { symbol: 'USDJPY',  label: 'دلار / ین',        unit: '¥', kind: 'fx',   tag: 'FX'   },
+    ];
 
-  <!-- صفحه درباره بازی -->
-  <div class="panel" id="pAbout">
-    <div class="game-card" style="text-align: center; line-height: 1.8;">
-      <h3 style="font-size: 18px; font-weight: 900; margin-top: 0;">درباره بازی رازیان</h3>
-      <p style="font-size: 13px; color: var(--text-sub);">چالش‌های روزانه اطلاعات عمومی، معماهای سخت و تست‌های هوش. امتیاز جمع کن و رتبه‌ات رو بالا ببر!</p>
-    </div>
-  </div>
+    // ---------- State ----------
+    const state = new Map();
+    const grid = document.getElementById('grid');
+    const statusEl = document.getElementById('status');
+    const statusText = document.getElementById('statusText');
+    const lastUpdateEl = document.getElementById('lastUpdate');
 
-</div>
+    // ---------- Helpers ----------
+    const fmt = (n, dec = 2) => Number(n).toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    const fmtIran = (n) => Number(n).toLocaleString('fa-IR');
 
-<nav>
-  <div id="n0" class="on" onclick="switchTab(0, 'pGame')"><em>🎮</em>بازی</div>
-  <div id="n1" onclick="switchTab(1, 'pRank')"><em>🏆</em>رتبه‌بندی</div>
-  <div id="n2" onclick="switchTab(2, 'pAbout')"><em>⭐</em>درباره</div>
-</nav>
+    function setStatus(live, text) {
+      statusEl.classList.toggle('live', live);
+      statusText.textContent = text;
+    }
 
-<script>
-// دیتابیس سوالات و معماها
-const quizData = [
-  {
-    q: "کدام سیاره در منظومه شمسی به نام سیاره سرخ شناخته می‌شود؟",
-    options: ["مشتری", "مریخ", "زهره", "عطارد"],
-    answer: 1
-  },
-  {
-    q: "کدام زبان برنامه‌نویسی به عنوان زبان اصلی وب در سمت کاربر شناخته می‌شود؟",
-    options: ["Python", "C++", "JavaScript", "Java"],
-    answer: 2
-  },
-  {
-    q: "کدام شهر پایتخت کشور ژاپن است؟",
-    options: ["سئول", "پکن", "توکیو", "اوساکا"],
-    answer: 2
-  },
-  {
-    q: "بزرگترین اقیانوس کره زمین کدام است؟",
-    options: ["اقیانوس آرام", "اقیانوس اطلس", "اقیانوس هند", "اقیانوس منجمد شمالی"],
-    answer: 0
-  },
-  {
-    q: "سرعت نور تقریباً چند کیلومتر بر ثانیه است؟",
-    options: ["۱۵۰,۰۰۰", "۳۰۰,۰۰۰", "۴۵۰,۰۰۰", "۶۰۰,۰۰۰"],
-    answer: 1
-  }
-];
+    function render() {
+      grid.innerHTML = '';
+      for (const item of state.values()) {
+        const changeClass = item.change > 0 ? 'up' : item.change < 0 ? 'down' : 'flat';
+        const changeText = item.change == null ? '—' : `${item.change > 0 ? '+' : ''}${item.change.toFixed(2)}%`;
+        const priceText = item.kind === 'ir'
+          ? fmtIran(item.price)
+          : item.unit === '$'
+            ? `$${fmt(item.price, item.symbol === 'USDJPY' ? 2 : 2)}`
+            : fmt(item.price, 4);
 
-let currentLevel = 0;
-let score = 120;
+        const card = document.createElement('div');
+        card.className = `card ${item.kind}`;
+        card.innerHTML = `
+          <span class="tag">${item.tag}</span>
+          <div class="name">${item.label}</div>
+          <div class="price">${priceText}</div>
+          <div class="meta">
+            <span class="change ${changeClass}">${changeText}</span>
+            <span class="time">${item.time || '—'}</span>
+          </div>`;
+        grid.appendChild(card);
+      }
+    }
 
-function loadQuestion() {
-  if (currentLevel >= quizData.length) {
-    document.getElementById("pGame").innerHTML = `
-      <div class="game-card" style="text-align:center; padding: 40px 20px;">
-        <h2 style="font-size:22px; font-weight:900; color:var(--gold-neon); margin-bottom:10px;">🎉 تبریک! همه مراحل را تمام کردی</h2>
-        <p style="color:var(--text-sub); font-size:13.5px; margin-bottom:20px;">تو توانستی با موفقیت تمام معماهای این بخش را حل کنی.</p>
-        <button onclick="resetGame()" style="background:var(--accent-neon); color:#fff; border:0; padding:12px 24px; border-radius:14px; font-weight:800; cursor:pointer;">بازی مجدد</button>
-      </div>
-    `;
-    return;
-  }
+    function upsert(key, data) {
+      state.set(key, { ...state.get(key), ...data });
+    }
 
-  const qData = quizData[currentLevel];
-  document.getElementById("levelBadge").textContent = `مرحله ${currentLevel + 1} از ${quizData.length}`;
-  document.getElementById("questionText").textContent = qData.q;
+    // ---------- Fetchers ----------
+    async function fetchBiquote() {
+      const symbols = BIQUOTE_SYMBOLS.map(s => s.symbol);
+      const url = `${BIQUOTE}?${symbols.map(s => `symbols=${s}`).join('&')}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`biquote ${res.status}`);
+      const json = await res.json();
+      const list = Array.isArray(json) ? json : json.data || json.ticks || [];
 
-  const optContainer = document.getElementById("optionsContainer");
-  optContainer.innerHTML = qData.options.map((opt, index) => `
-    <button class="option-btn" onclick="checkAnswer(${index}, this)">
-      <span>${opt}</span>
-      <span style="font-size:12px; opacity:0.6;">گزینه ${index + 1}</span>
-    </button>
-  `).join("");
-}
+      for (const raw of list) {
+        const sym = raw.symbol || raw.Symbol;
+        const conf = BIQUOTE_SYMBOLS.find(c => c.symbol === sym);
+        if (!conf) continue;
+        const price = raw.price ?? raw.mid ?? raw.last;
+        const change = raw.changePercent ?? raw.change_percent ?? raw.changePct ?? null;
+        const t = raw.timestamp || raw.updatedAt;
+        upsert(sym, {
+          ...conf,
+          price,
+          change: change != null ? Number(change) : null,
+          time: t ? new Date(t).toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' }) : null,
+        });
+      }
+    }
 
-function checkAnswer(selectedIndex, btnElement) {
-  const qData = quizData[currentLevel];
-  const allBtns = document.querySelectorAll(".option-btn");
-  
-  // غیرفعال کردن کلیک مجدد
-  allBtns.forEach(b => b.style.pointerEvents = "none");
+    async function fetchGoldFallback() {
+      // فقط اگر biquote طلا را نداد، از gold-api.com استفاده کن
+      if (state.has('XAUUSD') && state.get('XAUUSD').price) return;
+      const res = await fetch(GOLD_API);
+      if (!res.ok) throw new Error(`gold-api ${res.status}`);
+      const j = await res.json();
+      upsert('XAUUSD', {
+        symbol: 'XAUUSD', label: 'طلا (اونس جهانی)', unit: '$', kind: 'gold', tag: 'Gold',
+        price: j.price,
+        change: null,
+        time: j.updatedAt ? new Date(j.updatedAt).toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' }) : null,
+      });
+    }
 
-  if (selectedIndex === qData.answer) {
-    btnElement.classList.add("correct");
-    score += 20;
-    document.getElementById("coinCount").textContent = score;
-    setTimeout(() => {
-      currentLevel++;
-      loadQuestion();
-    }, 1200);
-  } else {
-    btnElement.classList.add("wrong");
-    allBtns[qData.answer].classList.add("correct");
-    setTimeout(() => {
-      currentLevel++;
-      loadQuestion();
-    }, 1500);
-  }
-}
+    async function fetchIran() {
+      const res = await fetch(IRAN_API);
+      if (!res.ok) throw new Error(`iran ${res.status}`);
+      const j = await res.json();
+      const r = j.rates || {};
+      const c = j.change || {};
+      const t = j.time || null;
 
-function resetGame() {
-  currentLevel = 0;
-  score = 120;
-  document.getElementById("coinCount").textContent = score;
-  location.reload();
-}
+      const map = [
+        ['dollar', 'دلار آمریکا', 'IR-USD'],
+        ['gold',   'طلای ۱۸ عیار', 'IR-GOLD'],
+        ['emami',  'سکه امامی',     'IR-COIN'],
+      ];
+      for (const [key, label, id] of map) {
+        if (r[key] == null) continue;
+        upsert(id, {
+          symbol: id, label, unit: 'تومان', kind: 'ir', tag: 'Iran',
+          price: r[key],
+          change: c[key] != null ? Number(c[key]) : null,
+          time: t || null,
+        });
+      }
+    }
 
-function switchTab(index, panelId) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.getElementById(panelId).classList.add('active');
-  
-  [0, 1, 2].forEach(i => document.getElementById("n" + i)?.classList.toggle("on", i === index));
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
+    // ---------- Orchestrator ----------
+    async function refreshAll() {
+      setStatus(false, 'در حال دریافت…');
+      const results = await Promise.allSettled([
+        fetchBiquote(),
+        fetchIran(),
+      ]);
+      // fallback طلا
+      try { await fetchGoldFallback(); } catch (_) {}
 
-loadQuestion();
+      const ok = results.filter(r => r.status === 'fulfilled').length;
+      setStatus(ok > 0, ok > 0 ? 'زنده' : 'خطا در اتصال');
+      lastUpdateEl.textContent = `آخرین تلاش: ${new Date().toLocaleTimeString('fa-IR')}`;
+      render();
+    }
 
-if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}
-</script>
+    // ---------- Boot ----------
+    document.getElementById('refreshBtn').addEventListener('click', refreshAll);
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+
+    refreshAll();
+    setInterval(refreshAll, 10000); // هر ۱۰ ثانیه
+  </script>
 </body>
 </html>
