@@ -6,7 +6,50 @@
 <title>Razian</title> <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#04100d">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;800&display=swap" rel="stylesheet">
-<style>
+<style> /* ... استایل‌های قبلی خودت ... */
+
+/* ===== استایل‌های جدید ویدیو پلیر ===== */
+#player-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #000;
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 14px 0;
+  box-shadow: 0 10px 30px #000a;
+}
+#player-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.quality-selector {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0;
+  flex-wrap: wrap;
+}
+.quality-btn {
+  background: var(--glass);
+  border: 1px solid var(--line);
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.quality-btn.active {
+  background: linear-gradient(100deg, var(--a), var(--b));
+  color: #021;
+  font-weight: 800;
+  border: 0;
+}
+</style> <!-- اینجای فایل استایل بسته میشه -->
+  
 :root{--bg:#04100d;--a:#3be8b0;--b:#ffc857;--mut:#9db3ac;--glass:#ffffff12;--line:#ffffff1c}
 body[data-t="2"]{--bg:#12060f;--a:#ff7ab6;--b:#ffb86b;--mut:#bfa3b8}
 body[data-t="3"]{--bg:#060a1a;--a:#7aa2ff;--b:#c78bff;--mut:#a3accc}
