@@ -262,4 +262,86 @@ function show(){
 function pick(k){
   if(R.lock)return;R.lock=1;
   const ok=R.opts[k]===R.ans;
-  document.querySelectorAll(".opt").forEach((b,i)=>{b.disabled=true;if(R.o
+  
+document.querySelectorAll(".opt").forEach((b,i)=>{b.disabled=true;if(R.opts[i]===R.ans)b.classList.add("ok");else if(i===k)b.classList.add("no")});
+  fb(ok,R.ans);
+}
+function chk(){
+  if(R.lock)return;const v=($("ti").value||"").trim().toLowerCase();if(!v)return;
+  R.lock=1;const w=R.qs[R.i].w;$("ti").disabled=true;fb(v===w.en,w.en);
+}
+function bld(q){
+  R.bw=q.b[1].split(" ");R.ord=sh(R.bw.map((_,k)=>k));R.sel=[];
+  shell(`<div class="pr">جمله رو بساز (روی کلمه‌ها بزن)</div><div class="bw fa" style="font-size:22px">${q.b[0]}</div><div class="ba" id="ba"></div><div class="bc" id="bc"></div>`);
+  bdraw();$("lf").innerHTML=`<button class="big" onclick="bchk()">بررسی</button>`;
+}
+function bdraw(){
+  $("ba").innerHTML=R.sel.map(k=>`<button class="ch" onclick="bun(${k})">${R.bw[k]}</button>`).join("");
+  $("bc").innerHTML=R.ord.map(k=>`<button class="ch" ${R.sel.includes(k)?"disabled":""} onclick="bad(${k})">${R.bw[k]}</button>`).join("");
+}
+function bad(k){if(R.lock)return;R.sel.push(k);sp(R.bw[k]);bdraw()}
+function bun(k){if(R.lock)return;R.sel=R.sel.filter(x=>x!==k);bdraw()}
+function bchk(){
+  if(R.lock||!R.sel.length)return;R.lock=1;
+  const a=R.qs[R.i].b[1];fb(R.sel.map(k=>R.bw[k]).join(" ")===a,a);
+}
+function fb(ok,ans){
+  beep(ok);const q=R.qs[R.i],w=q.w;
+  if(ok){R.ok++;boom(["✨","⭐","💎"]);if(w){S.known[w.en]=1;S.wrong=S.wrong.filter(x=>x!==w.en)}}
+  else{R.mis++;if(w&&!S.wrong.includes(w.en))S.wrong.push(w.en);if(R.mode!=="test"){lose();R.qs.push(q);R.n++}}
+  save();
+  $("lf").innerHTML=`<div class="fb ${ok?"g":"b"}"><b>${ok?"درسته! ✅":"جواب درست: "+ans}</b><span style="font-size:13px">${pk(ok?GOOD:BAD)}</span><button class="big" onclick="nextQ()">ادامه</button></div>`;
+}
+function nextQ(){
+  R.i++;
+  if(R.mode!=="test"&&S.hearts<=0){fail();return}
+  show();
+}
+function pairs(q){
+  const ws=q.ws;R.m=0;R.pe=null;R.pf=null;
+  const L=sh(ws.map((w,k)=>k)),Rr=sh(ws.map((w,k)=>k));
+  shell(`<div class="pr">جفت‌های درست رو وصل کن</div><div class="pg"><div>${L.map(k=>`<button class="opt en" onclick="pt(0,${k},this)">${ws[k].en}</button>`).join("")}</div><div>${Rr.map(k=>`<button class="opt" onclick="pt(1,${k},this)">${ws[k].fa}</button>`).join("")}</div></div>`);
+}
+function pt(side,k,el){
+  if(el.disabled)return;
+  if(side===0){sp(R.qs[R.i].ws[k].en);if(R.pe)R.pe.classList.remove("sel");R.pe=el;R.ke=k}
+  else{if(R.pf)R.pf.classList.remove("sel");R.pf=el;R.kf=k}
+  el.classList.add("sel");
+  if(!R.pe||!R.pf)return;
+  if(R.ke===R.kf){
+    beep(true);[R.pe,R.pf].forEach(b=>{b.classList.remove("sel");b.classList.add("ok");b.disabled=true});
+    S.known[R.qs[R.i].ws[R.ke].en]=1;save();R.m++;R.pe=R.pf=null;
+    if(R.m>=4)setTimeout(()=>{R.ok++;nextQ()},500);
+  }else{
+    beep(false);const a=R.pe,b=R.pf;R.pe=R.pf=null;
+    [a,b].forEach(x=>{x.classList.remove("sel");x.classList.add("shake")});
+    setTimeout(()=>[a,b].forEach(x=>x.classList.remove("shake")),350);
+    R.mis++;if(R.mode!=="test"){lose();if(S.hearts<=0)setTimeout(fail,400)}
+  }
+}
+function buyH(){if(S.gems>=20){S.gems-=20;S.hearts=5;S.hAt=0;save();quit()}else toast("💎 کافی نداری؛ درس بخون و کریستال جمع کن")}
+function fail(){
+  $("L").style.display="flex";
+  $("L").innerHTML=`<div class="lb"><div class="res"><h1>💔</h1><b>جغد می‌گه: قلب‌هات تموم شد!</b><br><span style="color:var(--mut);font-size:14px">هر ۱۰ دقیقه یه قلب برمی‌گرده.<br>یا با تمرین یا ۲۰ کریستال قلب بگیر.</span></div><button class="big" onclick="buyH()">💎 خرید قلب (۲۰ کریستال)</button><button class="big g" onclick="prac('rand')">🏋️ تمرین برای گرفتن قلب</button><button class="big g" onclick="quit()">بازگشت</button></div>`;
+}
+function finish(){
+  let h="";const acc=Math.round(R.ok/Math.max(1,R.ok+R.mis)*100);
+  if(R.mode==="test"){
+    const s=R.ok,st=s>=8?10:s>=5?5:0;S.start=st;S.prog={};save();
+    h=`<h1>🎯</h1><b>نتیجه: ${s} از ${R.n}</b><br>${st===0?"از جنگل افسون شروع می‌کنیم 🌲":st===5?"مستقیم می‌ری قله‌های ابری 🏔️":"تو یه ستاره‌ای! می‌ری قلمرو ستاره‌ها 🌌"}`;
+  }else{
+    const xp=R.mode==="lesson"?10+(R.mis===0?5:0):5,gm=R.mode==="lesson"?5+Math.floor(Math.random()*8):2;
+    touch(xp);S.gems+=gm;
+    if(R.mode==="lesson"&&(S.prog[R.unit]||0)===R.no&&R.no<3){S.prog[R.unit]=R.no+1}
+    if(R.mode==="prac"&&S.hearts<5){S.hearts++}
+    save();boom(["🎉","💎","⭐","✨"]);
+    const done=R.mode==="lesson"&&pr(R.unit)>=3;
+    h=`<h1>${R.mis===0?"🏆":"🎁"}</h1><b>${done?"سرزمین فتح شد!":"ماموریت موفق!"}</b><br>⭐ +${xp} امتیاز &nbsp; 💎 +${gm} کریستال &nbsp; 🎯 ${acc}%${R.mode==="prac"?"<br>❤️ یه قلب گرفتی":""}`;
+  }
+  $("L").innerHTML=`<div class="lb"><div class="res">${h}</div></div><div class="lf"><button class="big" onclick="quit()">ادامه</button></div>`;
+}
+home();
+if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}
+</script>
+</body>
+</html>
