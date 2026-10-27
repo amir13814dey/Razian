@@ -373,6 +373,58 @@ function finish(){
   }
   $("L").innerHTML=`<div class="lb"><div class="res">${h}</div></div><div class="lf"><button class="big" onclick="quit()">ادامه</button></div>`;
 }
+  /* موسیقی آرام پیانو - ساخته‌شده توسط خود اپ */
+const MU={on:true,ctx:null,out:null,t:null};
+try{MU.on=localStorage.getItem("rr_m")!=="0"}catch(e){}
+const mf=m=>440*Math.pow(2,(m-69)/12);
+const PROG=[[57,60,64],[53,57,60],[48,52,55],[55,59,62]];
+const PENT=[69,72,74,76,79,81];
+let mbar=0;
+function muInit(){
+  if(MU.ctx)return;
+  try{
+    const C=new(window.AudioContext||window.webkitAudioContext)();
+    const m=C.createGain();m.gain.value=.5;
+    const len=Math.floor(C.sampleRate*2.5),buf=C.createBuffer(2,len,C.sampleRate);
+    for(let c=0;c<2;c++){const d=buf.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3)}
+    const rv=C.createConvolver();rv.buffer=buf;
+    const w=C.createGain();w.gain.value=.45;
+    m.connect(C.destination);m.connect(rv);rv.connect(w);w.connect(C.destination);
+    MU.ctx=C;MU.out=m;
+  }catch(e){}
+}
+function pnote(f,t,v,d){
+  const C=MU.ctx,o=C.createOscillator(),o2=C.createOscillator(),g=C.createGain(),g2=C.createGain(),lp=C.createBiquadFilter();
+  o.type="triangle";o2.type="sine";o.frequency.value=f;o2.frequency.value=f*2;g2.gain.value=.25;
+  lp.type="lowpass";lp.frequency.value=2200;
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.015);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+  o.connect(lp);o2.connect(g2);g2.connect(lp);lp.connect(g);g.connect(MU.out);
+  o.start(t);o2.start(t);o.stop(t+d+.1);o2.stop(t+d+.1);
+}
+function muBar(){
+  if(!MU.on||!MU.ctx||document.hidden)return;
+  const t=MU.ctx.currentTime+.05,ch=PROG[mbar%4];mbar++;
+  pnote(mf(ch[0]-12),t,.14,5);
+  ch.forEach((m,i)=>pnote(mf(m),t+.4+i*.5,.09,3.5));
+  for(let k=0;k<3;k++){
+    if(Math.random()<.75)pnote(mf(PENT[Math.floor(Math.random()*PENT.length)]),t+2+k*1.3+Math.random()*.4,.07,3);
+  }
+}
+function muStart(){
+  muInit();
+  if(!MU.ctx)return;
+  MU.ctx.resume();
+  if(!MU.t){muBar();MU.t=setInterval(muBar,6000)}
+}
+function muTog(){
+  MU.on=!MU.on;
+  try{localStorage.setItem("rr_m",MU.on?"1":"0")}catch(e){}
+  $("mb").style.opacity=MU.on?1:.4;
+  if(MU.on)muStart();
+}
+document.querySelector(".chips").insertAdjacentHTML("beforeend",'<div class="chp" id="mb" onclick="muTog()">🎵</div>');
+$("mb").style.opacity=MU.on?1:.4;
+document.addEventListener("pointerdown",()=>{if(MU.on)muStart()},{once:true});
 home();
 if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}
 </script>
